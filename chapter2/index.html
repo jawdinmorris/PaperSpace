@@ -7,17 +7,19 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>More Drawing To Canvas</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="drawing.js"></script>
 </head>
 
 <body>
     <h1>More drawing to canvas</h1>
-    <canvas id="asteroids" width="400" height="400"></canvas>
+    <canvas id="asteroids" width="500" height="500"></canvas>
     <script>
         //Set Canvas
         var canvas = document.getElementById("asteroids");
         var context = canvas.getContext("2d");
 
         // Grid Drawing
+        draw_grid(context)
     </script>
 </body>
 
