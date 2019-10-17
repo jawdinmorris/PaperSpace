@@ -72,7 +72,7 @@ function Asteroid(mass, x, y, x_speed, y_speed, rotation_speed) {
     this.circumference = 2 * Math.PI * this.radius;
     this.segments = Math.ceil(this.circumference / 15);
     this.segments = Math.min(25, Math.max(5, this.segments));
-    this.noise = 0.2;
+    this.noise = 0.5;
     this.shape = [];
     for (var i = 0; i < this.segments; i++) {
         this.shape.push(2 * (Math.random() - 0.5));
@@ -100,13 +100,13 @@ Asteroid.prototype.child = function (mass) {
 function Ship(x, y, power, weapon_power) {
     this.super(x, y, 300, 300, 1.5 * Math.PI);
     this.thruster_power = power;
-    this.steering_power = this.thruster_power / 20;
+    this.steering_power = this.thruster_power / 10;
     this.right_thruster = false;
     this.left_thruster = false;
     this.thruster_on = false;
     this.weapon_power = weapon_power;
     this.loaded = false;
-    this.weapon_reload_time = 0.25; // seconds 
+    this.weapon_reload_time = 0.05; // seconds 
     this.time_until_reloaded = this.weapon_reload_time;
     this.compromised = false;
     this.max_health = 2.0;

@@ -13,14 +13,14 @@ var AsteroidsGame = function (id) {
     this.guide = false;
     this.ship_mass = 10;
     this.ship_radius = 30;
-    this.asteroid_mass = 5000; // Mass of asteroids
+    this.asteroid_mass = 10000; // Mass of asteroids
     this.asteroid_push = 5000000; // max force to apply in one frame
     this.ship = new Ship(
         this.ship_mass,
         this.ship_radius,
         this.canvas.width / 2,
         this.canvas.height / 2,
-        4000, 400
+        8000, 8000
     );
     this.projectiles = [];
     this.asteroids = [];
@@ -31,10 +31,10 @@ var AsteroidsGame = function (id) {
             digits: 2
         }
     );
-    this.asteroids.push(this.moving_asteroid());
-    this.asteroids.push(this.moving_asteroid());
-    this.asteroids.push(this.moving_asteroid());
-    this.asteroids.push(this.moving_asteroid());
+    for (i = 0; i < 5; i++) {
+        this.asteroids.push(this.moving_asteroid());
+
+    }
 
     this.mass_destroyed = 500;
     this.score = 0;
