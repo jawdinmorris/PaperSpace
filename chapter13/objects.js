@@ -162,7 +162,7 @@ Ship.prototype.projectile = function (elapsed) {
 }
 
 function Projectile(mass, lifetime, x, y, x_speed, y_speed, rotation_speed) {
-    var density = 0.001; // low density means we can see very light projectiles
+    var density = 0.05; // low density means we can see very light projectiles
     var radius = Math.sqrt((mass / density) / Math.PI);
     this.super(mass, radius, x, y, 0, x_speed, y_speed, rotation_speed);
     this.lifetime = lifetime;
