@@ -189,10 +189,11 @@ AsteroidsGame.prototype.draw = function () {
         this.message.draw(this.c, "GAME OVER", "Press space to play again");
         return;
     }
-    this.ship.draw(this.c, this.guide);
     this.projectiles.forEach(function (p) {
         p.draw(this.c);
     }, this);
+    this.ship.draw(this.c, this.guide);
+
     this.health_indicator.draw(this.c, this.ship.health, this.ship.max_health);
     this.score_indicator.draw(this.c, this.score);
     this.level_indicator.draw(this.c, this.level);
