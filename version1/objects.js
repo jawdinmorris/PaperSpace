@@ -72,7 +72,7 @@ function Asteroid(mass, x, y, x_speed, y_speed, rotation_speed) {
     this.circumference = 2 * Math.PI * this.radius;
     this.segments = Math.ceil(this.circumference / 15);
     this.segments = Math.min(25, Math.max(5, this.segments));
-    this.noise = 0.5;
+    this.noise = 0.2;
     this.shape = [];
     for (var i = 0; i < this.segments; i++) {
         this.shape.push(2 * (Math.random() - 0.5));
