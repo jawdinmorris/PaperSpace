@@ -18,10 +18,11 @@
         var context = document.getElementById("asteroids").getContext("2d");
 
         var asteroids = [
-            new Asteroid(24, 50, 0.2),
-            new Asteroid(24, 50, 0.5),
-            new Asteroid(5, 50, 0.2),
-            new Asteroid(150, 50, 0.5)
+            // new Asteroid(24, 50, 0.2),
+            // new Asteroid(24, 50, 0.5),
+            // new Asteroid(5, 50, 0.2),
+            // new Asteroid(150, 50, 0.5),
+            new Asteroid(Math.random() * 250, Math.random() * 150, Math.random())
         ];
 
         function draw(ctx, guide) {
