@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Pacman Behaviour</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="drawing.js"></script>
+    <script src="objects.js"></script>
+</head>
+
+<body>
+    <h1>Pacman Behaviour</h1>
+    <canvas id="pacman" width="300" height="300"></canvas>
+    <script>
+        var context = document.getElementById("pacman").getContext("2d");
+        pacman = new PacMan(150, 150, 20, 120);
+        var ghosts = [
+            new Ghost(Math.random() * 300, Math.random() * 300, 20, 80, "blue"),
+            new Ghost(Math.random() * 300, Math.random() * 300, 20, 80, "red"),
+            new Ghost(Math.random() * 300, Math.random() * 300, 20, 80, "green"),
+            new Ghost(Math.random() * 300, Math.random() * 300, 20, 80, "yellow"),
+        ]
+
+        function draw(ctx, guide) {
+            draw_grid(ctx);
+            pacman.draw(ctx);
+            ghosts.forEach(function (ghost) {
+                ghost.draw(ctx)
+            });
+
+        }
+
+        function update(elapsed) {
+            pacman.update(elapsed, 300, 300);
+            ghosts.forEach(function (ghost) {
+                ghost.update(pacman, elapsed)
+            });
+        }
+
+        var previous, elapsed;
+
+        function frame(timestamp) {
+            context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+            if (!previous) previous = timestamp;
+            elapsed = timestamp - previous;
+            update(elapsed / 1000);
+            draw(context, true);
+            previous = timestamp;
+            window.requestAnimationFrame(frame);
+        }
+
+        window.requestAnimationFrame(frame);
+    </script>
+</body>
+
+</html>
