@@ -150,7 +150,7 @@ function draw_asteroid(ctx, radius, shape, options) {
         ctx.lineTo(radius + radius * noise * shape[i], 0);
     }
     ctx.closePath();
-    ctx.fillStyle = "rgb(" + ((100 * radius) % 50) + "%," + ((100 * radius) % 70) + "%," + ((100 * radius) % 50) + "%)";
+    ctx.fillStyle = "rgb(" + ((255 * radius) % 255) + "%," + ((100 * radius) % 255) + "%," + ((100 * radius) % 50) + "%)";
     ctx.fill();
     ctx.stroke();
     if (options.guide) {

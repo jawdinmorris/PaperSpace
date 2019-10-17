@@ -108,6 +108,10 @@ AsteroidsGame.prototype.key_handler = function (e, value) {
                 this.ship.trigger = value;
             }
             break;
+        case "b":
+        case 66: // g for guide
+            this.ship.bomb = value;
+            break;
         case "g":
         case 71: // g for guide
             if (value) this.guide = !this.guide;
@@ -159,7 +163,10 @@ AsteroidsGame.prototype.update = function (elapsed) {
         }
     }, this);
     if (this.ship.trigger && this.ship.loaded) {
-        this.projectiles.push(this.ship.projectile(elapsed));
+        this.projectiles.push(this.ship.projectile(elapsed, 0.0005));
+    }
+    if (this.ship.bomb && this.ship.bomb_loaded) {
+        this.projectiles.push(this.ship.projectile(elapsed, .05));
     }
 }
 

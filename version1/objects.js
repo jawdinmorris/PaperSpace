@@ -110,6 +110,10 @@ function Ship(x, y, power, weapon_power) {
     this.compromised = false;
     this.max_health = 2.0;
     this.health = this.max_health;
+    this.bomb = false;
+    this.bomb_loaded = false;
+    this.bomb_reload_time = 2.0; // seconds 
+    this.time_until_bomb_reloaded = this.bomb_reload_time;
     this.super(x, y, 300, 300, 1.5 * Math.PI);
 
 }
@@ -125,6 +129,10 @@ Ship.prototype.update = function (elapsed, c) {
     this.loaded = this.time_until_reloaded === 0;
     if (!this.loaded) {
         this.time_until_reloaded -= Math.min(elapsed, this.time_until_reloaded);
+    }
+    this.bomb_loaded = this.time_until_bomb_reloaded === 0;
+    if (!this.bomb_loaded) {
+        this.time_until_bomb_reloaded -= Math.min(elapsed, this.time_until_bomb_reloaded);
     }
     if (this.compromised) {
         this.health -= Math.min(elapsed, this.health);
@@ -150,15 +158,21 @@ Ship.prototype.draw = function (c, guide) {
     });
     c.restore();
 }
-Ship.prototype.projectile = function (elapsed) {
-    var p = new Projectile(0.0005, 1,
+Ship.prototype.projectile = function (elapsed, density) {
+    var p = new Projectile(density, 1,
         this.x + Math.cos(this.angle) * this.radius,
-        this.y + Math.sin(this.angle) * this.radius, this.x_speed,
+        this.y + Math.sin(this.angle) * this.radius,
+        this.x_speed,
         this.y_speed,
         this.rotation_speed);
     p.push(this.angle, this.weapon_power, elapsed);
     this.push(this.angle + Math.PI, this.weapon_power, elapsed);
     this.time_until_reloaded = this.weapon_reload_time;
+    if (this.time_until_bomb_reloaded > 0) {
+
+    } else {
+        this.time_until_bomb_reloaded = this.bomb_reload_time;
+    }
     return p;
 }
 
