@@ -165,12 +165,15 @@ Ship.prototype.projectile = function (elapsed, density) {
         this.x_speed,
         this.y_speed,
         this.rotation_speed);
+    if (this.time_until_bomb_reloaded == 0) {
+        p.x_speed = p.x_speed / 10;
+        p.y_speed = p.y_speed / 10;
+        p.lifetime = 2;
+    }
     p.push(this.angle, this.weapon_power, elapsed);
     this.push(this.angle + Math.PI, this.weapon_power, elapsed);
     this.time_until_reloaded = this.weapon_reload_time;
-    if (this.time_until_bomb_reloaded > 0) {
-
-    } else {
+    if (this.time_until_bomb_reloaded > 0) {} else {
         this.time_until_bomb_reloaded = this.bomb_reload_time;
     }
     return p;

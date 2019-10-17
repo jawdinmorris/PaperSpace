@@ -166,7 +166,7 @@ AsteroidsGame.prototype.update = function (elapsed) {
         this.projectiles.push(this.ship.projectile(elapsed, 0.0005));
     }
     if (this.ship.bomb && this.ship.bomb_loaded) {
-        this.projectiles.push(this.ship.projectile(elapsed, .05));
+        this.projectiles.push(this.ship.projectile(0, .01));
     }
 }
 
