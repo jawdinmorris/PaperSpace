@@ -16,7 +16,10 @@ var AsteroidsGame = function (id) {
     this.asteroid_mass = 10000; // Mass of asteroids
     this.asteroid_push = 5000000; // max force to apply in one frame
     this.mass_destroyed = 500;
-    this.health_indicator = new Indicator("health", 5, 5, 100, 10);
+    this.health_indicator = new Indicator("health   ", 5, 5, 100, 10);
+    this.reload_indicator = new IncrementingIndicator("cannon ", 5, 20, 100, 10)
+    this.bomb_reload_indicator = new IncrementingIndicator("bomb    ", 5, 35, 100, 10)
+
     this.score_indicator = new NumberIndicator("score", this.canvas.width - 10, 5);
     this.fps_indicator = new NumberIndicator("fps",
         this.canvas.width - 10, this.canvas.height - 15, {
@@ -45,6 +48,7 @@ AsteroidsGame.prototype.reset_game = function () {
         100, 100
     );
     this.projectiles = [];
+    this.bombs = [];
     this.asteroids = [];
 
     this.asteroids.push(this.moving_asteroid());
@@ -102,15 +106,20 @@ AsteroidsGame.prototype.key_handler = function (e, value) {
             //     break;
         case " ":
         case 32: //spacebar
+            this.ship.trigger = value;
+            break;
+        case "r":
+        case 82: // r for reset
             if (this.game_over) {
                 this.reset_game();
+                break;
             } else {
-                this.ship.trigger = value;
+                break;
             }
             break;
         case "b":
-        case 66: // g for guide
-            this.ship.bomb = value;
+        case 66: // b for bomb
+            this.ship.bombTrigger = value;
             break;
         case "g":
         case 71: // g for guide
@@ -148,6 +157,7 @@ AsteroidsGame.prototype.update = function (elapsed) {
         return;
     }
     this.ship.update(elapsed, this.c);
+
     this.projectiles.forEach(function (p, i, projectiles) {
         p.update(elapsed, this.c);
         if (p.life <= 0) {
@@ -162,11 +172,27 @@ AsteroidsGame.prototype.update = function (elapsed) {
             }, this);
         }
     }, this);
+
+    this.bombs.forEach(function (b, i, bombs) {
+        b.update(elapsed, this.c);
+        if (b.life <= 0) {
+            bombs.splice(i, 1);
+        } else {
+            this.asteroids.forEach(function (asteroid, j) {
+                if (collision(asteroid, b)) {
+                    bombs.splice(i, 1);
+                    this.asteroids.splice(j, 1);
+                    this.split_asteroid(asteroid, elapsed);
+                }
+            }, this);
+        }
+    }, this);
+
     if (this.ship.trigger && this.ship.loaded) {
         this.projectiles.push(this.ship.projectile(elapsed, 0.0005));
     }
-    if (this.ship.bomb && this.ship.bomb_loaded) {
-        this.projectiles.push(this.ship.projectile(0, .01));
+    if (this.ship.bombTrigger && this.ship.bomb_loaded) {
+        this.bombs.push(this.ship.bomb(elapsed, .01));
     }
 }
 
@@ -185,18 +211,26 @@ AsteroidsGame.prototype.draw = function () {
     this.asteroids.forEach(function (asteroid) {
         asteroid.draw(this.c, this.guide);
     }, this);
+
+    this.score_indicator.draw(this.c, this.score);
+    this.level_indicator.draw(this.c, this.level);
+    this.health_indicator.draw(this.c, this.ship.health, this.ship.max_health);
+    this.reload_indicator.draw(this.c, this.ship.time_until_reloaded, this.ship.weapon_reload_time);
+    this.bomb_reload_indicator.draw(this.c, this.ship.time_until_bomb_reloaded, this.ship.bomb_reload_time);
+
     if (this.game_over) {
-        this.message.draw(this.c, "GAME OVER", "Press space to play again");
+        this.message.draw(this.c, "GAME OVER", "Press R to Reset");
         return;
     }
     this.projectiles.forEach(function (p) {
         p.draw(this.c);
     }, this);
+    this.bombs.forEach(function (b) {
+        b.draw(this.c);
+    }, this);
     this.ship.draw(this.c, this.guide);
 
-    this.health_indicator.draw(this.c, this.ship.health, this.ship.max_health);
-    this.score_indicator.draw(this.c, this.score);
-    this.level_indicator.draw(this.c, this.level);
+
 }
 
 AsteroidsGame.prototype.split_asteroid = function (asteroid, elapsed) {
@@ -206,7 +240,7 @@ AsteroidsGame.prototype.split_asteroid = function (asteroid, elapsed) {
     var ch1 = asteroid.child(asteroid.mass * split);
     var ch2 = asteroid.child(asteroid.mass * (1 - split));
     [ch1, ch2].forEach(function (child) {
-        if (child.mass < this.mass_destroyed) {
+        if (child.mass < this.mass_destroyed * 2) {
             this.score += child.mass;
         } else {
             this.push_asteroid(child, elapsed);

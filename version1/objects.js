@@ -110,7 +110,7 @@ function Ship(x, y, power, weapon_power) {
     this.compromised = false;
     this.max_health = 2.0;
     this.health = this.max_health;
-    this.bomb = false;
+    this.bombTrigger = false;
     this.bomb_loaded = false;
     this.bomb_reload_time = 2.0; // seconds 
     this.time_until_bomb_reloaded = this.bomb_reload_time;
@@ -126,14 +126,17 @@ Ship.prototype.update = function (elapsed, c) {
     this.twist(
         (this.right_thruster - this.left_thruster) * this.steering_power, elapsed
     );
+
     this.loaded = this.time_until_reloaded === 0;
     if (!this.loaded) {
         this.time_until_reloaded -= Math.min(elapsed, this.time_until_reloaded);
     }
+
     this.bomb_loaded = this.time_until_bomb_reloaded === 0;
     if (!this.bomb_loaded) {
         this.time_until_bomb_reloaded -= Math.min(elapsed, this.time_until_bomb_reloaded);
     }
+
     if (this.compromised) {
         this.health -= Math.min(elapsed, this.health);
     }
@@ -158,6 +161,7 @@ Ship.prototype.draw = function (c, guide) {
     });
     c.restore();
 }
+
 Ship.prototype.projectile = function (elapsed, density) {
     var p = new Projectile(density, 1,
         this.x + Math.cos(this.angle) * this.radius,
@@ -173,10 +177,46 @@ Ship.prototype.projectile = function (elapsed, density) {
     p.push(this.angle, this.weapon_power, elapsed);
     this.push(this.angle + Math.PI, this.weapon_power, elapsed);
     this.time_until_reloaded = this.weapon_reload_time;
-    if (this.time_until_bomb_reloaded > 0) {} else {
-        this.time_until_bomb_reloaded = this.bomb_reload_time;
-    }
     return p;
+}
+
+Ship.prototype.bomb = function (elapsed, density) {
+    var b = new Bomb(density, 1,
+        this.x + Math.cos(this.angle) * this.radius,
+        this.y + Math.sin(this.angle) * this.radius,
+        this.x_speed,
+        this.y_speed,
+        this.rotation_speed);
+
+    b.x_speed = b.x_speed / 10;
+    b.y_speed = b.y_speed / 10;
+    b.lifetime = 2;
+    b.push(this.angle, this.weapon_power, elapsed);
+    this.push(this.angle + Math.PI, this.weapon_power, elapsed);
+    this.time_until_bomb_reloaded = this.bomb_reload_time;
+    return b;
+}
+
+function Bomb(mass, lifetime, x, y, x_speed, y_speed, rotation_speed) {
+    var density = 0.000002; // low density means we can see very light projectiles
+    var radius = Math.sqrt((mass / density) / Math.PI);
+    this.super(mass, radius, x, y, 0, x_speed, y_speed, rotation_speed);
+    this.lifetime = lifetime;
+    this.life = 1.0;
+}
+extend(Bomb, Mass);
+
+Bomb.prototype.update = function (elapsed, c) {
+    this.life -= (elapsed / this.lifetime);
+    Mass.prototype.update.apply(this, arguments);
+}
+
+Bomb.prototype.draw = function (c, guide) {
+    c.save();
+    c.translate(this.x, this.y);
+    c.rotate(this.angle);
+    draw_bomb(c, this.radius, this.life, guide);
+    c.restore();
 }
 
 function Projectile(mass, lifetime, x, y, x_speed, y_speed, rotation_speed) {
@@ -220,6 +260,35 @@ Indicator.prototype.draw = function (c, max, level) {
     c.rect(offset + this.x, this.y, this.width, this.height);
     c.stroke();
     c.beginPath();
+    c.rect(offset + this.x, this.y, this.width * (max / level), this.height);
+    c.fill();
+    c.restore()
+}
+
+function IncrementingIndicator(label, x, y, width, height) {
+    this.label = label + ": ";
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+}
+
+IncrementingIndicator.prototype.draw = function (c, max, level) {
+    c.save();
+    c.strokeStyle = "white";
+    c.fillStyle = "white";
+    c.font = this.height + "pt Arial";
+    var offset = c.measureText(this.label).width;
+    c.fillText(this.label, this.x, this.y + this.height - 1);
+    c.fillStyle = "red";
+    c.beginPath();
+    c.rect(offset + this.x, this.y, this.width, this.height);
+    c.stroke();
+    c.beginPath();
+    c.rect(offset + this.x, this.y, this.width, this.height);
+    c.fill();
+    c.beginPath();
+    c.fillStyle = "black";
     c.rect(offset + this.x, this.y, this.width * (max / level), this.height);
     c.fill();
     c.restore()
