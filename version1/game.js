@@ -5,6 +5,10 @@ function collision(obj1, obj2) {
 function distance_between(obj1, obj2) {
     return Math.sqrt(Math.pow(obj1.x - obj2.x, 2) + Math.pow(obj1.y - obj2.y, 2));
 }
+var bombSound = new Audio('bomb.wav');
+var laserSound = new Audio('laser.wav')
+var shipCollisionSound = new Audio('shipCollision.wav')
+var plopSound = new Audio('plop.mp3')
 
 var AsteroidsGame = function (id) {
     this.canvas = document.getElementById(id);
@@ -158,6 +162,9 @@ AsteroidsGame.prototype.update = function (elapsed) {
         asteroid.update(elapsed, this.c);
         if (collision(asteroid, this.ship)) {
             this.ship.compromised = true;
+            if (!this.game_over) {
+                shipCollisionSound.play();
+            }
         }
     }, this);
     if (this.ship.health <= 0) {
@@ -176,6 +183,7 @@ AsteroidsGame.prototype.update = function (elapsed) {
                     projectiles.splice(i, 1);
                     this.asteroids.splice(j, 1);
                     this.split_asteroid(asteroid, elapsed);
+                    plopSound.play()
                 }
             }, this);
         }
@@ -191,6 +199,7 @@ AsteroidsGame.prototype.update = function (elapsed) {
                     bombs.splice(i, 1);
                     this.asteroids.splice(j, 1);
                     this.split_asteroid(asteroid, elapsed);
+                    plopSound.play();
                 }
             }, this);
         }

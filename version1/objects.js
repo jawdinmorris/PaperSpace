@@ -166,6 +166,7 @@ Ship.prototype.draw = function (c, guide) {
 }
 
 Ship.prototype.projectile = function (elapsed, density) {
+    laserSound.play();
     var p = new Projectile(density, 1,
         this.x + Math.cos(this.angle) * this.radius,
         this.y + Math.sin(this.angle) * this.radius,
@@ -175,7 +176,7 @@ Ship.prototype.projectile = function (elapsed, density) {
     if (this.time_until_bomb_reloaded == 0) {
         p.x_speed = p.x_speed / 10;
         p.y_speed = p.y_speed / 10;
-        p.lifetime = 2;
+        p.lifetime = 1;
     }
     p.push(this.angle, this.weapon_power, elapsed);
     this.push(this.angle + Math.PI, this.weapon_power, elapsed);
@@ -187,6 +188,7 @@ Ship.prototype.projectile = function (elapsed, density) {
 }
 
 Ship.prototype.bomb = function (elapsed, density) {
+    bombSound.play();
     var b = new Bomb(density, 1,
         this.x + Math.cos(this.angle) * this.radius,
         this.y + Math.sin(this.angle) * this.radius,
