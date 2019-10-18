@@ -207,18 +207,46 @@ function draw_line(ctx, obj1, obj2) {
     ctx.restore();
 }
 
-function draw_background() {
-    tick++;
+function draw_background(ctx, minor, major, stroke, fill) {
+    minor = minor || 10;
+    major = major || minor * 5;
+    stroke = stroke || "white";
+    fill = fill || "#009900";
+    if (Math.random() > 0.98) {
+        minor = 9;
+        major = minor * 5;
+        stroke = "green";
+    } else if (Math.random() > 0.99) {
+        minor = 8;
+        major = minor * 5;
+        stroke = "red";
+    }
+    ctx.save();
 
-    ctx.a.clearRect(0, 0, canvas.a.width, canvas.a.height);
+    ctx.strokeStyle = stroke;
+    ctx.fillStyle = fill;
+    let width = ctx.canvas.width,
+        height = ctx.canvas.height
 
-    ctx.b.fillStyle = backgroundColor;
-    ctx.b.fillRect(0, 0, canvas.a.width, canvas.a.height);
+    for (var x = 0; x < width; x += minor) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.lineWidth = (x % major == 0) ? 0.5 : 0.25;
+        ctx.stroke();
+    }
 
-    drawParticles();
-    renderGlow();
+    for (var y = 0; y < height; y += minor) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.lineWidth = (y % major == 0) ? 0.5 : 0.25;
+        ctx.stroke();
+
+    }
+
+    ctx.restore();
 }
-
 
 //PACMAN
 function draw_pacman(ctx, radius, openValue) {

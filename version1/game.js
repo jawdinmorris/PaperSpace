@@ -198,6 +198,7 @@ AsteroidsGame.prototype.update = function (elapsed) {
 
 AsteroidsGame.prototype.draw = function () {
     this.c.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    draw_background(this.c)
     if (this.guide) {
         draw_grid(this.c);
         this.asteroids.forEach(function (asteroid) {
@@ -230,7 +231,7 @@ AsteroidsGame.prototype.draw = function () {
     }, this);
     this.ship.draw(this.c, this.guide);
 
-
+    draw_pacman(this.c, 10, .2);
 }
 
 AsteroidsGame.prototype.split_asteroid = function (asteroid, elapsed) {
