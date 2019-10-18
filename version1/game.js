@@ -39,7 +39,7 @@ var AsteroidsGame = function (id) {
 AsteroidsGame.prototype.reset_game = function () {
     this.game_over = false;
     this.score = 0;
-    this.level = 0;
+    this.level = 1;
     this.ship = new Ship(
         this.ship_mass,
         this.ship_radius,
@@ -192,7 +192,7 @@ AsteroidsGame.prototype.update = function (elapsed) {
         this.projectiles.push(this.ship.projectile(elapsed, 0.0005));
     }
     if (this.ship.bombTrigger && this.ship.bomb_loaded) {
-        this.bombs.push(this.ship.bomb(elapsed, .01));
+        this.bombs.push(this.ship.bomb(elapsed, 0.02));
     }
 }
 
@@ -230,8 +230,6 @@ AsteroidsGame.prototype.draw = function () {
         b.draw(this.c);
     }, this);
     this.ship.draw(this.c, this.guide);
-
-    draw_pacman(this.c, 10, .2);
 }
 
 AsteroidsGame.prototype.split_asteroid = function (asteroid, elapsed) {
@@ -252,7 +250,7 @@ AsteroidsGame.prototype.split_asteroid = function (asteroid, elapsed) {
 
 AsteroidsGame.prototype.level_up = function () {
     this.level += 1;
-    for (var i = 0; i <= this.level; i++) {
+    for (var i = 0; i < this.level; i++) {
         this.asteroids.push(this.moving_asteroid());
     }
 }

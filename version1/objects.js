@@ -198,10 +198,10 @@ Ship.prototype.bomb = function (elapsed, density) {
 }
 
 function Bomb(mass, lifetime, x, y, x_speed, y_speed, rotation_speed) {
-    var density = 0.000002; // low density means we can see very light projectiles
+    var density = 0.000005; // low density means we can see very light projectiles
     var radius = Math.sqrt((mass / density) / Math.PI);
     this.super(mass, radius, x, y, 0, x_speed, y_speed, rotation_speed);
-    this.lifetime = lifetime;
+    this.lifetime = 5;
     this.life = 1.0;
 }
 extend(Bomb, Mass);
@@ -215,7 +215,10 @@ Bomb.prototype.draw = function (c, guide) {
     c.save();
     c.translate(this.x, this.y);
     c.rotate(this.angle);
-    draw_bomb(c, this.radius, this.life, guide);
+    draw_bomb(c, this.radius, this.life, guide, {
+        noise: this.noise,
+        guide: guide
+    });
     c.restore();
 }
 

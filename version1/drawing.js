@@ -187,11 +187,19 @@ function draw_projectile(ctx, radius, lifetime) {
 function draw_bomb(ctx, radius, lifetime) {
     ctx.save();
     ctx.beginPath();
-    ctx.fillStyle = "rgb(100%, 0%, 0%)";
-    ctx.strokeStyle = "blue"
-    ctx.arc(0, 0, radius, 0, 2 * Math.PI);
+    this.shape = [];
+    this.segments = 20;
+    for (var i = 0; i < this.segments; i++) {
+        this.shape.push(2 * (Math.random() - 0.5));
+    }
+    for (let i = 0; i < shape.length; i++) {
+        ctx.rotate(2 * Math.PI / shape.length);
+        ctx.lineTo(radius + radius * 0.7 * shape[i], 0);
+    }
     ctx.closePath();
+    ctx.fillStyle = "rgb(100%, 30%, 30%)";
     ctx.fill();
+    ctx.strokeStyle = "black"
     ctx.stroke();
     ctx.restore();
 }
@@ -212,15 +220,15 @@ function draw_background(ctx, minor, major, stroke, fill) {
     major = major || minor * 5;
     stroke = stroke || "white";
     fill = fill || "#009900";
-    if (Math.random() > 0.98) {
-        minor = 9;
-        major = minor * 5;
-        stroke = "green";
-    } else if (Math.random() > 0.99) {
-        minor = 8;
-        major = minor * 5;
-        stroke = "red";
-    }
+    // if (Math.random() > 0.98) {
+    //     minor = 9;
+    //     major = minor * 5;
+    //     stroke = "green";
+    // } else if (Math.random() > 0.99) {
+    //     minor = 8;
+    //     major = minor * 5;
+    //     stroke = "red";
+    // }
     ctx.save();
 
     ctx.strokeStyle = stroke;
