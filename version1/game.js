@@ -11,7 +11,7 @@ var AsteroidsGame = function (id) {
     this.c = this.canvas.getContext("2d");
     this.canvas.focus();
     this.guide = false;
-    this.ship_mass = 10;
+    this.ship_mass = 20;
     this.ship_radius = 30;
     this.asteroid_mass = 10000; // Mass of asteroids
     this.asteroid_push = 5000000; // max force to apply in one frame
@@ -110,7 +110,7 @@ AsteroidsGame.prototype.key_handler = function (e, value) {
             break;
         case "ArrowDown":
         case 40:
-            //     this.ship.retro_on = value;
+            this.ship.retro_thruster = value;
             break;
         case " ":
         case 32: //spacebar
