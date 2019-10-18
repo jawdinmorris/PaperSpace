@@ -172,19 +172,31 @@ function draw_asteroid(ctx, radius, shape, options) {
 
 }
 
-function draw_projectile(ctx, radius, lifetime) {
+function draw_projectile(ctx, radius, lifetime, options) {
+    options = options || {};
     ctx.save();
     ctx.beginPath();
     ctx.fillStyle = "rgb(100%, 100%," + (100 * lifetime) + "%)";
     ctx.strokeStyle = "blue";
     ctx.arc(0, 0, radius, 0, 2 * Math.PI);
     ctx.closePath();
+    if (options.guide) {
+        ctx.strokeStyle = "white";
+        ctx.fillStyle = "rgba(0, 0, 0, 0.25)";
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.arc(0, 0, radius, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.fill();
+    }
     ctx.fill();
     ctx.stroke();
     ctx.restore();
+
 }
 
-function draw_bomb(ctx, radius, lifetime) {
+function draw_bomb(ctx, radius, lifetime, options) {
+    options = options || {};
     ctx.save();
     ctx.beginPath();
     this.shape = [];
@@ -197,9 +209,71 @@ function draw_bomb(ctx, radius, lifetime) {
         ctx.lineTo(radius + radius * 0.7 * shape[i], 0);
     }
     ctx.closePath();
+
     ctx.fillStyle = "rgb(100%, 30%, 30%)";
     ctx.fill();
     ctx.strokeStyle = "black"
+    ctx.stroke();
+
+    ctx.restore();
+}
+
+function draw_bullet_powerup(ctx, radius, lifetime) {
+    // variables used to draw & animate the ring
+    var PI2 = Math.PI * 2;
+    var ringX, ringY, ringRadius, ingCounter, ringCounterVelocity;
+    ringX = 0;
+    ringY = 0;
+    ringRadius = radius;
+    ringCounter = lifetime * 150;
+    ringCounterVelocity = 0.5;
+    if (ringCounter < 200) {
+        // expand the ring using easeInCubic easing
+        ringRadius = easeInCubic(ringCounter, 0, 15, 100);
+    } else {
+        // shrink the ring using easeOutCubic easing
+        ringRadius = easeOutCubic(ringCounter - 100, 15, -15, 100);
+
+    }
+    ctx.save();
+    // set the context styles
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "white";
+    ctx.fillStyle = "purple";
+    ctx.beginPath();
+    ctx.arc(ringX, ringY, ringRadius, 0, PI2);
+    ctx.closePath();
+    ctx.fill()
+    ctx.stroke();
+    ctx.restore();
+}
+
+function draw_health_powerup(ctx, radius, lifetime) {
+    // variables used to draw & animate the ring
+    var PI2 = Math.PI * 2;
+    var ringX, ringY, ringRadius, ingCounter, ringCounterVelocity;
+    ringX = 0;
+    ringY = 0;
+    ringRadius = radius;
+    ringCounter = lifetime * 150;
+    ringCounterVelocity = 0.5;
+    if (ringCounter < 200) {
+        // expand the ring using easeInCubic easing
+        ringRadius = easeInCubic(ringCounter, 0, 15, 100);
+    } else {
+        // shrink the ring using easeOutCubic easing
+        ringRadius = easeOutCubic(ringCounter - 100, 15, -15, 100);
+
+    }
+    ctx.save();
+    // set the context styles
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "white";
+    ctx.fillStyle = "pink";
+    ctx.beginPath();
+    ctx.arc(ringX, ringY, ringRadius, 0, PI2);
+    ctx.closePath();
+    ctx.fill()
     ctx.stroke();
     ctx.restore();
 }
@@ -295,4 +369,12 @@ function draw_ghost(ctx, radius, options) {
     ctx.fill();
     ctx.stroke();
     ctx.restore();
+}
+
+function easeInCubic(now, startValue, deltaValue, duration) {
+    return deltaValue * (now /= duration) * now * now + startValue;
+}
+
+function easeOutCubic(now, startValue, deltaValue, duration) {
+    return deltaValue * ((now = now / duration - 1) * now * now + 1) + startValue;
 }

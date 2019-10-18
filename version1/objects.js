@@ -115,7 +115,7 @@ function Ship(x, y, power, weapon_power) {
     this.bomb_reload_time = 2.0; // seconds 
     this.time_until_bomb_reloaded = this.bomb_reload_time;
     this.super(x, y, 300, 300, 1.5 * Math.PI);
-
+    this.powerup_status = false;
 }
 
 extend(Ship, Mass);
@@ -177,6 +177,9 @@ Ship.prototype.projectile = function (elapsed, density) {
     p.push(this.angle, this.weapon_power, elapsed);
     this.push(this.angle + Math.PI, this.weapon_power, elapsed);
     this.time_until_reloaded = this.weapon_reload_time;
+    if (this.powerup_status == true) {
+        this.time_until_reloaded = this.weapon_reload_time / 4;
+    }
     return p;
 }
 
@@ -219,6 +222,39 @@ Bomb.prototype.draw = function (c, guide) {
         noise: this.noise,
         guide: guide
     });
+    c.restore();
+}
+
+function Powerup(type, mass, lifetime, x, y, x_speed, y_speed, rotation_speed) {
+    var density = 0.000005; // low density means we can see very light projectiles
+    var radius = Math.sqrt((mass / density) / Math.PI * 3);
+    this.super(mass, radius, x, y, 0, x_speed, y_speed, rotation_speed);
+    this.lifetime = 5;
+    this.life = 1.0;
+    this.type = type;
+}
+extend(Powerup, Mass);
+
+Powerup.prototype.update = function (elapsed, c) {
+    this.life -= (elapsed / this.lifetime);
+    Mass.prototype.update.apply(this, arguments);
+}
+
+Powerup.prototype.draw = function (c, guide) {
+    c.save();
+    c.translate(this.x, this.y);
+    c.rotate(this.angle);
+    if (this.type == "doubleBullets") {
+        draw_bullet_powerup(c, this.radius, this.life, guide, {
+            noise: this.noise,
+            guide: guide,
+        });
+    } else {
+        draw_health_powerup(c, this.radius, this.life, guide, {
+            noise: this.noise,
+            guide: guide,
+        });
+    }
     c.restore();
 }
 
@@ -310,7 +346,7 @@ function NumberIndicator(label, x, y, options) {
 NumberIndicator.prototype.draw = function (c, value) {
     c.save();
     c.fillStyle = "white";
-    c.font = this.pt + "pt Arial";
+    c.font = 15 + "pt Arial";
     c.textAlign = this.align;
     c.fillText(
         this.label + value.toFixed(this.digits),

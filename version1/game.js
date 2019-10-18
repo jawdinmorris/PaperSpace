@@ -20,13 +20,13 @@ var AsteroidsGame = function (id) {
     this.reload_indicator = new IncrementingIndicator("cannon ", 5, 20, 100, 10)
     this.bomb_reload_indicator = new IncrementingIndicator("bomb    ", 5, 35, 100, 10)
 
-    this.score_indicator = new NumberIndicator("score", this.canvas.width - 10, 5);
+    this.score_indicator = new NumberIndicator("score", this.canvas.width - 50, 10);
     this.fps_indicator = new NumberIndicator("fps",
         this.canvas.width - 10, this.canvas.height - 15, {
             digits: 2
         }
     );
-    this.level_indicator = new NumberIndicator("level", this.canvas.width / 2, 5, {
+    this.level_indicator = new NumberIndicator("level", this.canvas.width / 2, 10, {
         align: "center"
     });
     this.message = new Message(this.canvas.width / 2, this.canvas.height * 0.4);
@@ -50,11 +50,16 @@ AsteroidsGame.prototype.reset_game = function () {
     this.projectiles = [];
     this.bombs = [];
     this.asteroids = [];
+    this.powerups = [];
 
     this.asteroids.push(this.moving_asteroid());
 
 
 }
+AsteroidsGame.prototype.new_powerup = function (x, y, type) {
+    return new Powerup(type, .001, 100, x, y, 0, 0, 0)
+}
+
 AsteroidsGame.prototype.moving_asteroid = function (elapsed) {
     var asteroid = this.new_asteroid();
     this.push_asteroid(asteroid, elapsed);
@@ -68,6 +73,7 @@ AsteroidsGame.prototype.new_asteroid = function () {
         this.canvas.height * Math.random()
     );
 }
+
 
 AsteroidsGame.prototype.push_asteroid = function (asteroid, elapsed) {
     elapsed = elapsed || 0.015;
@@ -100,10 +106,10 @@ AsteroidsGame.prototype.key_handler = function (e, value) {
         case 39: // right arrow
             this.ship.right_thruster = value;
             break;
-            // case "ArrowDown":
-            // case 40:
+        case "ArrowDown":
+        case 40:
             //     this.ship.retro_on = value;
-            //     break;
+            break;
         case " ":
         case 32: //spacebar
             this.ship.trigger = value;
@@ -188,6 +194,25 @@ AsteroidsGame.prototype.update = function (elapsed) {
         }
     }, this);
 
+    this.powerups.forEach(function (p, i, powerups) {
+        p.update(elapsed, this.c);
+        if (p.life <= 0) {
+            powerups.splice(i, 1);
+        } else {
+            if (collision(this.ship, p)) {
+                powerups.splice(i, 1);
+                if (p.type == "doubleBullets") {
+                    this.ship.powerup_status = true;
+                    setTimeout(function () {
+                        game.ship.powerup_status = false
+                    }, 3000);
+                } else if (p.type == "health") {
+                    this.ship.health = this.ship.max_health;
+                }
+            }
+        }
+    }, this);
+
     if (this.ship.trigger && this.ship.loaded) {
         this.projectiles.push(this.ship.projectile(elapsed, 0.0005));
     }
@@ -229,6 +254,9 @@ AsteroidsGame.prototype.draw = function () {
     this.bombs.forEach(function (b) {
         b.draw(this.c);
     }, this);
+    this.powerups.forEach(function (po) {
+        po.draw(this.c);
+    }, this);
     this.ship.draw(this.c, this.guide);
 }
 
@@ -241,6 +269,11 @@ AsteroidsGame.prototype.split_asteroid = function (asteroid, elapsed) {
     [ch1, ch2].forEach(function (child) {
         if (child.mass < this.mass_destroyed * 2) {
             this.score += child.mass;
+            if (Math.random() > .95) {
+                this.drop_powerup(child.x, child.y, "health");
+            } else if (Math.random() > .90) {
+                this.drop_powerup(child.x, child.y, "doubleBullets");
+            }
         } else {
             this.push_asteroid(child, elapsed);
             this.asteroids.push(child);
@@ -253,4 +286,9 @@ AsteroidsGame.prototype.level_up = function () {
     for (var i = 0; i < this.level; i++) {
         this.asteroids.push(this.moving_asteroid());
     }
+}
+
+AsteroidsGame.prototype.drop_powerup = function (x, y, type) {
+    var powerup = this.new_powerup(x, y, type);
+    this.powerups.push(powerup);
 }
