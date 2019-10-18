@@ -16,9 +16,10 @@ var AsteroidsGame = function (id) {
     this.asteroid_mass = 10000; // Mass of asteroids
     this.asteroid_push = 5000000; // max force to apply in one frame
     this.mass_destroyed = 500;
-    this.health_indicator = new Indicator("health   ", 5, 5, 100, 10);
+    this.health_indicator = new Indicator("health   :", 5, 5, 100, 10);
     this.reload_indicator = new IncrementingIndicator("cannon ", 5, 20, 100, 10)
     this.bomb_reload_indicator = new IncrementingIndicator("bomb    ", 5, 35, 100, 10)
+    this.level_progress_indicator = new Indicator("", this.canvas.width / 2 - 50, 30, 100, 10)
 
     this.score_indicator = new NumberIndicator("score", this.canvas.width - 50, 10);
     this.fps_indicator = new NumberIndicator("fps",
@@ -39,6 +40,7 @@ var AsteroidsGame = function (id) {
 AsteroidsGame.prototype.reset_game = function () {
     this.game_over = false;
     this.score = 0;
+    this.baseScore = 0;
     this.level = 1;
     this.ship = new Ship(
         this.ship_mass,
@@ -243,7 +245,11 @@ AsteroidsGame.prototype.draw = function () {
     this.health_indicator.draw(this.c, this.ship.health, this.ship.max_health);
     this.reload_indicator.draw(this.c, this.ship.time_until_reloaded, this.ship.weapon_reload_time);
     this.bomb_reload_indicator.draw(this.c, this.ship.time_until_bomb_reloaded, this.ship.bomb_reload_time);
-
+    // if (this.level == 1) {
+    //     this.level_progress_indicator.draw(this.c, this.score, (this.level * 10000));
+    // } else {
+    this.level_progress_indicator.draw(this.c, this.score - this.baseScore, (this.level * 10000));
+    // }
     if (this.game_over) {
         this.message.draw(this.c, "GAME OVER", "Press R to Reset");
         return;
@@ -283,6 +289,7 @@ AsteroidsGame.prototype.split_asteroid = function (asteroid, elapsed) {
 
 AsteroidsGame.prototype.level_up = function () {
     this.level += 1;
+    this.baseScore = this.score;
     for (var i = 0; i < this.level; i++) {
         this.asteroids.push(this.moving_asteroid());
     }

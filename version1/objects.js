@@ -281,7 +281,7 @@ Projectile.prototype.draw = function (c, guide) {
 }
 
 function Indicator(label, x, y, width, height) {
-    this.label = label + ": ";
+    this.label = label + " ";
     this.x = x;
     this.y = y;
     this.width = width;
