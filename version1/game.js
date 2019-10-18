@@ -13,8 +13,8 @@ var AsteroidsGame = function (id) {
     this.guide = false;
     this.ship_mass = 20;
     this.ship_radius = 30;
-    this.asteroid_mass = 10000; // Mass of asteroids
-    this.asteroid_push = 5000000; // max force to apply in one frame
+    this.asteroid_mass = 15000; // Mass of asteroids
+    this.asteroid_push = 10000000; // max force to apply in one frame
     this.mass_destroyed = 500;
     this.health_indicator = new Indicator("health   :", 5, 5, 100, 10);
     this.reload_indicator = new IncrementingIndicator("cannon ", 5, 20, 100, 10)
@@ -248,7 +248,7 @@ AsteroidsGame.prototype.draw = function () {
     // if (this.level == 1) {
     //     this.level_progress_indicator.draw(this.c, this.score, (this.level * 10000));
     // } else {
-    this.level_progress_indicator.draw(this.c, this.score - this.baseScore, (this.level * 10000));
+    this.level_progress_indicator.draw(this.c, this.score - this.baseScore, (this.level * this.asteroid_mass));
     // }
     if (this.game_over) {
         this.message.draw(this.c, "GAME OVER", "Press R to Reset");
