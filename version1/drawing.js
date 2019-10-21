@@ -219,62 +219,128 @@ function draw_bomb(ctx, radius, lifetime, options) {
 }
 
 function draw_bullet_powerup(ctx, radius, lifetime) {
-    // variables used to draw & animate the ring
-    var PI2 = Math.PI * 2;
-    var ringX, ringY, ringRadius, ingCounter, ringCounterVelocity;
-    ringX = 0;
-    ringY = 0;
-    ringRadius = radius;
-    ringCounter = lifetime * 150;
-    ringCounterVelocity = 0.5;
-    if (ringCounter < 200) {
-        // expand the ring using easeInCubic easing
-        ringRadius = easeInCubic(ringCounter, 0, 15, 100);
-    } else {
-        // shrink the ring using easeOutCubic easing
-        ringRadius = easeOutCubic(ringCounter - 100, 15, -15, 100);
+    // // variables used to draw & animate the ring
+    // var PI2 = Math.PI * 2;
+    // var ringX, ringY, ringRadius, ingCounter, ringCounterVelocity;
+    // ringX = 0;
+    // ringY = 0;
+    // ringRadius = radius;
+    // ringCounter = lifetime * 150;
+    // ringCounterVelocity = 0.5;
+    // if (ringCounter < 200) {
+    //     // expand the ring using easeInCubic easing
+    //     ringRadius = easeInCubic(ringCounter, 0, 15, 100);
+    // } else {
+    //     // shrink the ring using easeOutCubic easing
+    //     ringRadius = easeOutCubic(ringCounter - 100, 15, -15, 100);
 
-    }
+    // }
+    // ctx.save();
+    // // set the context styles
+    // ctx.lineWidth = 3;
+
+    // ctx.beginPath();
+    // ctx.arc(ringX, ringY, ringRadius, 0, PI2);
+    // ctx.closePath();
+    // ctx.fill()
+    // ctx.stroke();
+    // ctx.restore();
+
     ctx.save();
-    // set the context styles
-    ctx.lineWidth = 3;
+    var cx = 0;
+    var cy = 0;
+    var spikes = 5;
+    var outerRadius = 20;
+    var innerRadius = 10;
+    var rot = Math.PI / 2 * 3;
+    var x = cx;
+    var y = cy;
+    var step = Math.PI / spikes;
+
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - outerRadius)
+    for (i = 0; i < spikes; i++) {
+        x = cx + Math.cos(rot) * outerRadius;
+        y = cy + Math.sin(rot) * outerRadius;
+        ctx.lineTo(x, y)
+        rot += step
+
+        x = cx + Math.cos(rot) * innerRadius;
+        y = cy + Math.sin(rot) * innerRadius;
+        ctx.lineTo(x, y)
+        rot += step
+    }
+    ctx.lineTo(cx, cy - outerRadius);
+    ctx.closePath();
+    ctx.lineWidth = 5;
     ctx.strokeStyle = "white";
     ctx.fillStyle = "purple";
-    ctx.beginPath();
-    ctx.arc(ringX, ringY, ringRadius, 0, PI2);
-    ctx.closePath();
-    ctx.fill()
     ctx.stroke();
+    ctx.fill();
+
+    var cx = -8;
+    var cy = -8;
+    var spikes = 5;
+    var outerRadius = 20;
+    var innerRadius = 10;
+    var rot = Math.PI / 2 * 3;
+    var x = cx;
+    var y = cy;
+    var step = Math.PI / spikes;
+
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - outerRadius)
+    for (i = 0; i < spikes; i++) {
+        x = cx + Math.cos(rot) * outerRadius;
+        y = cy + Math.sin(rot) * outerRadius;
+        ctx.lineTo(x, y)
+        rot += step
+
+        x = cx + Math.cos(rot) * innerRadius;
+        y = cy + Math.sin(rot) * innerRadius;
+        ctx.lineTo(x, y)
+        rot += step
+    }
+    ctx.lineTo(cx, cy - outerRadius);
+    ctx.closePath();
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = "white";
+    ctx.fillStyle = "purple";
+    ctx.stroke();
+    ctx.fill();
     ctx.restore();
+
 }
 
 function draw_health_powerup(ctx, radius, lifetime) {
     // variables used to draw & animate the ring
-    var PI2 = Math.PI * 2;
-    var ringX, ringY, ringRadius, ingCounter, ringCounterVelocity;
-    ringX = 0;
-    ringY = 0;
-    ringRadius = radius;
-    ringCounter = lifetime * 150;
-    ringCounterVelocity = 0.5;
-    if (ringCounter < 200) {
-        // expand the ring using easeInCubic easing
-        ringRadius = easeInCubic(ringCounter, 0, 15, 100);
-    } else {
-        // shrink the ring using easeOutCubic easing
-        ringRadius = easeOutCubic(ringCounter - 100, 15, -15, 100);
-
-    }
+    ctx.lineWidth = 0;
+    ctx.strokeStyle = "black";
+    ctx.fillStyle = "red";
     ctx.save();
-    // set the context styles
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = "white";
-    ctx.fillStyle = "pink";
+
+    //triangle
     ctx.beginPath();
-    ctx.arc(ringX, ringY, ringRadius, 0, PI2);
+    ctx.moveTo(0, 8);
+    ctx.lineTo(32.5, 8);
+    ctx.quadraticCurveTo(32, 20, 16, 32)
+    ctx.quadraticCurveTo(-2, 20, 0, 8)
     ctx.closePath();
-    ctx.fill()
-    ctx.stroke();
+    ctx.fill();
+
+    //top left circle
+    ctx.beginPath();
+    ctx.arc(8, 9, 8, 0, Math.PI * 2, true);
+    ctx.closePath()
+    ctx.fill();
+
+    //top right circle
+    ctx.beginPath();
+    ctx.arc(24, 9, 8, 0, Math.PI * 2, true);
+    ctx.closePath();
+    ctx.fill();
+
+
     ctx.restore();
 }
 
@@ -288,6 +354,11 @@ function draw_line(ctx, obj1, obj2) {
     ctx.stroke();
     ctx.restore();
 }
+
+function drawStar(cx, cy, spikes, outerRadius, innerRadius, ctx) {
+
+}
+
 
 function draw_background(ctx, minor, major, stroke, fill) {
     minor = minor || 10;
