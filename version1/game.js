@@ -272,8 +272,6 @@ AsteroidsGame.prototype.draw = function () {
     this.ship.draw(this.c, this.guide);
 
 
-
-
 }
 
 AsteroidsGame.prototype.split_asteroid = function (asteroid, elapsed) {

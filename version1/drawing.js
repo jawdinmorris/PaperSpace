@@ -142,6 +142,8 @@ function draw_ship(ctx, radius, options) {
 }
 
 function draw_asteroid(ctx, radius, shape, options) {
+    const rc = rough.canvas(document.getElementById('asteroids'));
+
     options = options || {};
     ctx.strokeStyle = options.stroke || "white";
     ctx.fillStyle = options.fill || "black";
@@ -149,18 +151,25 @@ function draw_asteroid(ctx, radius, shape, options) {
     ctx.shadowBlur = options.blur
     ctx.save();
     ctx.shadowInset = true;
-    // ctx.shadowBlur = 20;
+    ctx.shadowBlur = 20;
     ctx.shadowColor = "#000";
-    ctx.beginPath();
+    // ctx.beginPath();
     for (let i = 0; i < shape.length; i++) {
+        if (i > 1) {
+            var last_point = radius + radius * noise * shape[i - 1]
+        }
         ctx.rotate(2 * Math.PI / shape.length);
-        ctx.lineTo(radius + radius * noise * shape[i], 0);
+        rc.line(last_point / 2, last_point, -10, radius + radius * noise * shape[i] / 2, {
+            fill: "black",
+            stroke: "black"
+        });
+        // ctx.lineTo(radius + radius * noise * shape[i], 0);
     }
     ctx.closePath();
     ctx.fillStyle = "rgb(" + ((255 * radius) % 120) + "%," + ((100 * radius) % 255) + "%," + ((100 * radius) % 50) + "%)";
     ctx.fill();
-    ctx.strokeStyle = "black"
-    ctx.stroke();
+    // ctx.strokeStyle = "black"
+    // ctx.stroke();
     if (options.guide) {
         ctx.lineWidth = 0.5;
         ctx.beginPath();
@@ -180,29 +189,30 @@ function draw_asteroid(ctx, radius, shape, options) {
 }
 
 function draw_projectile(ctx, radius, lifetime, options) {
-    options = options || {};
-    ctx.shadowBlur = 0;
-    ctx.shadowInset = true;
-    ctx.shadowColor = "#000";
-    ctx.save();
-    ctx.beginPath();
-    ctx.fillStyle = "rgb(100%, 100%," + (100 * lifetime) + "%)";
-    ctx.strokeStyle = "blue";
-    ctx.arc(0, 0, radius, 0, 2 * Math.PI);
-    ctx.closePath();
-    if (options.guide) {
-        ctx.strokeStyle = "white";
-        ctx.fillStyle = "rgba(0, 0, 0, 0.25)";
-        ctx.lineWidth = 0.5;
-        ctx.beginPath();
-        ctx.arc(0, 0, radius, 0, 2 * Math.PI);
-        ctx.stroke();
-        ctx.fill();
-    }
-    ctx.fill();
-    ctx.stroke();
-    ctx.restore();
-    ctx.shadowInset = false;
+    // options = options || {};
+    // ctx.shadowBlur = 0;
+    // ctx.shadowInset = true;
+    // ctx.shadowColor = "#000";
+    // ctx.save();
+    // ctx.beginPath();
+    // ctx.fillStyle = "rgb(100%, 100%," + (100 * lifetime) + "%)";
+    // ctx.strokeStyle = "blue";
+    // ctx.arc(0, 0, radius, 0, 2 * Math.PI);
+    // ctx.closePath();
+    // if (options.guide) {
+    //     ctx.strokeStyle = "white";
+    //     ctx.fillStyle = "rgba(0, 0, 0, 0.25)";
+    //     ctx.lineWidth = 0.5;
+    //     ctx.beginPath();
+    //     ctx.arc(0, 0, radius, 0, 2 * Math.PI);
+    //     ctx.stroke();
+    //     ctx.fill();
+    // }
+    // ctx.fill();
+    // ctx.stroke();
+    // ctx.restore();
+    // ctx.shadowInset = false;
+    draw_rough_circle(radius * 2);
 }
 
 function draw_bomb(ctx, radius, lifetime, options) {
@@ -407,6 +417,13 @@ function draw_background(ctx, minor, major, stroke, fill) {
     ctx.restore();
 }
 
+function draw_rough_circle(radius) {
+    const rc = rough.canvas(document.getElementById('asteroids'));
+    rc.circle(0, 0, radius, {
+        fill: "rgb(10,150,10)",
+        fillWeight: 3 // thicker lines for hachure
+    });
+}
 //PACMAN
 function draw_pacman(ctx, radius, openValue) {
     radius = radius || 150;

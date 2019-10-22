@@ -79,7 +79,7 @@ function Asteroid(mass, x, y, x_speed, y_speed, rotation_speed) {
     this.circumference = 2 * Math.PI * this.radius;
     this.segments = Math.ceil(this.circumference / 15);
     this.segments = Math.min(25, Math.max(5, this.segments));
-    this.noise = 0.2;
+    this.noise = 0.5;
     this.shape = [];
     for (var i = 0; i < this.segments; i++) {
         this.shape.push(2 * (Math.random() - 0.5));
@@ -272,7 +272,7 @@ Powerup.prototype.draw = function (c, guide) {
 }
 
 function Projectile(mass, lifetime, x, y, x_speed, y_speed, rotation_speed) {
-    var density = 0.000002; // low density means we can see very light projectiles
+    var density = 0.000001; // low density means we can see very light projectiles
     var radius = Math.sqrt((mass / density) / Math.PI);
     this.super(mass, radius, x, y, 0, x_speed, y_speed, rotation_speed);
     this.lifetime = lifetime;
@@ -297,11 +297,12 @@ Projectile.prototype.draw = function (c, guide) {
     c.save();
     c.translate(this.x, this.y);
     c.rotate(this.angle);
-    draw_asteroid(c, this.radius, this.shape, {
-        noise: this.noise,
-        guide: guide,
-        blur: 10
-    });
+    // draw_asteroid(c, this.radius, this.shape, {
+    //     noise: this.noise,
+    //     guide: guide,
+    //     blur: 10
+    // });
+    draw_projectile(c, this.radius, this.life, guide);
     c.restore();
 }
 
@@ -314,6 +315,8 @@ function Indicator(label, x, y, width, height) {
 }
 
 Indicator.prototype.draw = function (c, max, level) {
+    const rc = rough.canvas(document.getElementById('asteroids'));
+
     c.save();
     c.strokeStyle = "black";
     c.fillStyle = "black";
@@ -321,10 +324,23 @@ Indicator.prototype.draw = function (c, max, level) {
     var offset = c.measureText(this.label).width;
     c.fillText(this.label, this.x, this.y + this.height - 1);
     c.beginPath();
-    c.rect(offset + this.x, this.y, this.width, this.height);
+    // c.rect(offset + this.x, this.y, this.width, this.height);
+    rc.rectangle(offset + this.x, this.y, this.width, this.height, {
+        roughness: 1,
+        fill: "white",
+        fillStyle: "solid",
+        fillWeight: 3,
+        hachureAngle: 60, // angle of hachure,
+        hachureGap: 8
+    })
     c.stroke();
     c.beginPath();
     c.rect(offset + this.x, this.y, this.width * (max / level), this.height);
+    rc.rectangle(offset + this.x, this.y, this.width * (max / level), this.height, {
+        roughness: 2,
+        fill: "red",
+        stroke: "red"
+    })
     c.fill();
     c.restore()
 }
@@ -338,6 +354,8 @@ function IncrementingIndicator(label, x, y, width, height) {
 }
 
 IncrementingIndicator.prototype.draw = function (c, max, level) {
+    const rc = rough.canvas(document.getElementById('asteroids'));
+
     c.save();
     c.strokeStyle = "black";
     c.fillStyle = "black";
@@ -347,13 +365,26 @@ IncrementingIndicator.prototype.draw = function (c, max, level) {
     c.fillStyle = "red";
     c.beginPath();
     c.rect(offset + this.x, this.y, this.width, this.height);
+    rc.rectangle(offset + this.x, this.y, this.width, this.height, {
+        roughness: 1,
+        bowing: 1,
+        fill: "red"
+    })
     c.stroke();
     c.beginPath();
-    c.rect(offset + this.x, this.y, this.width, this.height);
+    // c.rect(offset + this.x, this.y, this.width, this.height);
+    rc.rectangle(offset + this.x, this.y, this.width * (max / level), this.height, {
+        roughness: 1,
+        fill: "black"
+    })
     c.fill();
     c.beginPath();
     c.fillStyle = "black";
     c.rect(offset + this.x, this.y, this.width * (max / level), this.height);
+    rc.rectangle(offset + this.x, this.y, this.width * (max / level), this.height, {
+        roughness: 1,
+        fill: "black"
+    })
     c.fill();
     c.restore()
 }
