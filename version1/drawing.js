@@ -218,6 +218,36 @@ function draw_bomb(ctx, radius, lifetime, options) {
     ctx.restore();
 }
 
+function draw_star_shape(ctx, cx, cy, spikes, innerRadius, outerRadius, stroke, fill) {
+    ctx.save();
+    var rot = Math.PI / 2 * 3;
+    var x = cx;
+    var y = cy;
+    var step = Math.PI / spikes;
+
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - outerRadius)
+    for (i = 0; i < spikes; i++) {
+        x = cx + Math.cos(rot) * outerRadius;
+        y = cy + Math.sin(rot) * outerRadius;
+        ctx.lineTo(x, y)
+        rot += step
+
+        x = cx + Math.cos(rot) * innerRadius;
+        y = cy + Math.sin(rot) * innerRadius;
+        ctx.lineTo(x, y)
+        rot += step
+    }
+    ctx.lineTo(cx, cy - outerRadius);
+    ctx.closePath();
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = stroke
+    ctx.fillStyle = fill;
+    ctx.stroke();
+    ctx.fill();
+    ctx.restore();
+}
+
 function draw_bullet_powerup(ctx, radius, lifetime) {
     // // variables used to draw & animate the ring
     // var PI2 = Math.PI * 2;
@@ -246,69 +276,8 @@ function draw_bullet_powerup(ctx, radius, lifetime) {
     // ctx.stroke();
     // ctx.restore();
 
-    ctx.save();
-    var cx = 0;
-    var cy = 0;
-    var spikes = 5;
-    var outerRadius = 20;
-    var innerRadius = 10;
-    var rot = Math.PI / 2 * 3;
-    var x = cx;
-    var y = cy;
-    var step = Math.PI / spikes;
+    draw_star_shape(ctx, 0, 0, 5, 10, 20, "gold", "purple");
 
-    ctx.beginPath();
-    ctx.moveTo(cx, cy - outerRadius)
-    for (i = 0; i < spikes; i++) {
-        x = cx + Math.cos(rot) * outerRadius;
-        y = cy + Math.sin(rot) * outerRadius;
-        ctx.lineTo(x, y)
-        rot += step
-
-        x = cx + Math.cos(rot) * innerRadius;
-        y = cy + Math.sin(rot) * innerRadius;
-        ctx.lineTo(x, y)
-        rot += step
-    }
-    ctx.lineTo(cx, cy - outerRadius);
-    ctx.closePath();
-    ctx.lineWidth = 5;
-    ctx.strokeStyle = "white";
-    ctx.fillStyle = "purple";
-    ctx.stroke();
-    ctx.fill();
-
-    var cx = -8;
-    var cy = -8;
-    var spikes = 5;
-    var outerRadius = 20;
-    var innerRadius = 10;
-    var rot = Math.PI / 2 * 3;
-    var x = cx;
-    var y = cy;
-    var step = Math.PI / spikes;
-
-    ctx.beginPath();
-    ctx.moveTo(cx, cy - outerRadius)
-    for (i = 0; i < spikes; i++) {
-        x = cx + Math.cos(rot) * outerRadius;
-        y = cy + Math.sin(rot) * outerRadius;
-        ctx.lineTo(x, y)
-        rot += step
-
-        x = cx + Math.cos(rot) * innerRadius;
-        y = cy + Math.sin(rot) * innerRadius;
-        ctx.lineTo(x, y)
-        rot += step
-    }
-    ctx.lineTo(cx, cy - outerRadius);
-    ctx.closePath();
-    ctx.lineWidth = 5;
-    ctx.strokeStyle = "white";
-    ctx.fillStyle = "purple";
-    ctx.stroke();
-    ctx.fill();
-    ctx.restore();
 
 }
 
@@ -363,7 +332,7 @@ function drawStar(cx, cy, spikes, outerRadius, innerRadius, ctx) {
 function draw_background(ctx, minor, major, stroke, fill) {
     minor = minor || 10;
     major = major || minor * 5;
-    stroke = stroke || "white";
+    stroke = stroke || "#308ea2";
     fill = fill || "#009900";
     // if (Math.random() > 0.98) {
     //     minor = 9;
@@ -375,25 +344,34 @@ function draw_background(ctx, minor, major, stroke, fill) {
     //     stroke = "red";
     // }
     ctx.save();
+    ctx.fillStyle = '#fffff0';
+    ctx.fillRect(0, 0, 600, 600);
+    ctx.fillStyle = '#d6d6d4';
+    for (var i = 0; i < 12; i++) {
+        ctx.arc(25, 25 + (i * 50), 20, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.closePath();
+
+    }
 
     ctx.strokeStyle = stroke;
     ctx.fillStyle = fill;
     let width = ctx.canvas.width,
         height = ctx.canvas.height
 
-    for (var x = 0; x < width; x += minor) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, height);
-        ctx.lineWidth = (x % major == 0) ? 0.5 : 0.25;
-        ctx.stroke();
-    }
+    // for (var x = 0; x < width; x += minor) {
+    //     ctx.beginPath();
+    //     ctx.moveTo(x, 0);
+    //     ctx.lineTo(x, height);
+    //     ctx.lineWidth = (x % major == 0) ? 0.5 : 0.25;
+    //     ctx.stroke();
+    // }
 
     for (var y = 0; y < height; y += minor) {
         ctx.beginPath();
         ctx.moveTo(0, y);
         ctx.lineTo(width, y);
-        ctx.lineWidth = (y % major == 0) ? 0.5 : 0.25;
+        ctx.lineWidth = (y % major == 0) ? 1 : .5;
         ctx.stroke();
 
     }

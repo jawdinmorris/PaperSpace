@@ -295,8 +295,8 @@ function Indicator(label, x, y, width, height) {
 
 Indicator.prototype.draw = function (c, max, level) {
     c.save();
-    c.strokeStyle = "white";
-    c.fillStyle = "white";
+    c.strokeStyle = "black";
+    c.fillStyle = "black";
     c.font = this.height + "pt Arial";
     var offset = c.measureText(this.label).width;
     c.fillText(this.label, this.x, this.y + this.height - 1);
@@ -319,8 +319,8 @@ function IncrementingIndicator(label, x, y, width, height) {
 
 IncrementingIndicator.prototype.draw = function (c, max, level) {
     c.save();
-    c.strokeStyle = "white";
-    c.fillStyle = "white";
+    c.strokeStyle = "black";
+    c.fillStyle = "black";
     c.font = this.height + "pt Arial";
     var offset = c.measureText(this.label).width;
     c.fillText(this.label, this.x, this.y + this.height - 1);
@@ -350,7 +350,7 @@ function NumberIndicator(label, x, y, options) {
 
 NumberIndicator.prototype.draw = function (c, value) {
     c.save();
-    c.fillStyle = "white";
+    c.fillStyle = "black";
     c.font = 15 + "pt Arial";
     c.textAlign = this.align;
     c.fillText(
@@ -365,7 +365,7 @@ function Message(x, y, options) {
     this.y = y;
     this.main_pt = options.main_pt || 28;
     this.sub_pt = options.sub_pt || 18;
-    this.fill = options.fill || "white";
+    this.fill = options.fill || "black";
     this.textAlign = options.align || 'center';
 }
 Message.prototype.draw = function (c, main, sub) {

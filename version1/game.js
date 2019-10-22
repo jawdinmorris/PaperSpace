@@ -284,7 +284,6 @@ AsteroidsGame.prototype.split_asteroid = function (asteroid, elapsed) {
     [ch1, ch2].forEach(function (child) {
         if (child.mass < this.mass_destroyed * 2) {
             this.score += child.mass;
-            this.drop_powerup(child.x, child.y, "doubleBullets");
 
             if (Math.random() > .95) {
                 this.drop_powerup(child.x, child.y, "health");
