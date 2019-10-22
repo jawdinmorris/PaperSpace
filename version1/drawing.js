@@ -37,6 +37,9 @@ function draw_grid(ctx, minor, major, stroke, fill) {
 }
 
 function draw_ship(ctx, radius, options) {
+    ctx.shadowInset = true;
+    ctx.shadowBlur = 25;
+    ctx.shadowColor = "#000";
     options = options || {};
 
     let angle = (options.angle || 0.5 * Math.PI) / 2;
@@ -135,6 +138,7 @@ function draw_ship(ctx, radius, options) {
     }
 
     ctx.restore();
+    // ctx.shadowInset = false;
 }
 
 function draw_asteroid(ctx, radius, shape, options) {
@@ -142,8 +146,11 @@ function draw_asteroid(ctx, radius, shape, options) {
     ctx.strokeStyle = options.stroke || "white";
     ctx.fillStyle = options.fill || "black";
     noise = options.noise
+    ctx.shadowBlur = options.blur
     ctx.save();
-
+    ctx.shadowInset = true;
+    // ctx.shadowBlur = 20;
+    ctx.shadowColor = "#000";
     ctx.beginPath();
     for (let i = 0; i < shape.length; i++) {
         ctx.rotate(2 * Math.PI / shape.length);
@@ -169,11 +176,14 @@ function draw_asteroid(ctx, radius, shape, options) {
     }
     ctx.restore();
 
-
+    ctx.shadowInset = false;
 }
 
 function draw_projectile(ctx, radius, lifetime, options) {
     options = options || {};
+    ctx.shadowBlur = 0;
+    ctx.shadowInset = true;
+    ctx.shadowColor = "#000";
     ctx.save();
     ctx.beginPath();
     ctx.fillStyle = "rgb(100%, 100%," + (100 * lifetime) + "%)";
@@ -192,11 +202,14 @@ function draw_projectile(ctx, radius, lifetime, options) {
     ctx.fill();
     ctx.stroke();
     ctx.restore();
-
+    ctx.shadowInset = false;
 }
 
 function draw_bomb(ctx, radius, lifetime, options) {
     options = options || {};
+    ctx.shadowInset = true;
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = "#000";
     ctx.save();
     ctx.beginPath();
     this.shape = [];
@@ -214,11 +227,12 @@ function draw_bomb(ctx, radius, lifetime, options) {
     ctx.fill();
     ctx.strokeStyle = "black"
     ctx.stroke();
-
+    ctx.shadowInset = false;
     ctx.restore();
 }
 
 function draw_star_shape(ctx, cx, cy, spikes, innerRadius, outerRadius, stroke, fill) {
+
     ctx.save();
     var rot = Math.PI / 2 * 3;
     var x = cx;
@@ -246,6 +260,7 @@ function draw_star_shape(ctx, cx, cy, spikes, innerRadius, outerRadius, stroke, 
     ctx.stroke();
     ctx.fill();
     ctx.restore();
+
 }
 
 function draw_bullet_powerup(ctx, radius, lifetime) {
@@ -334,6 +349,10 @@ function draw_background(ctx, minor, major, stroke, fill) {
     major = major || minor * 5;
     stroke = stroke || "#308ea2";
     fill = fill || "#009900";
+    ctx.strokeStyle = stroke;
+    ctx.fillStyle = fill;
+    let width = ctx.canvas.width,
+        height = ctx.canvas.height
     // if (Math.random() > 0.98) {
     //     minor = 9;
     //     major = minor * 5;
@@ -347,17 +366,33 @@ function draw_background(ctx, minor, major, stroke, fill) {
     ctx.fillStyle = '#fffff0';
     ctx.fillRect(0, 0, 600, 600);
     ctx.fillStyle = '#d6d6d4';
+    for (var y = 0; y < height; y += minor) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.quadraticCurveTo(width / 2, y - 10, width, y)
+        // ctx.lineTo(width, y);
+        ctx.lineWidth = (y % major == 0) ? 1 : .5;
+        ctx.stroke();
+
+    }
     for (var i = 0; i < 12; i++) {
+        ctx.beginPath();
         ctx.arc(25, 25 + (i * 50), 20, 0, Math.PI * 2);
         ctx.fill();
         ctx.closePath();
+        // draw in image to main canvas
+        // var img = new Image;
+        // img.onload = function () {
+        //     ctx.shadowInset = true;
+        //     ctx.shadowBlur = 25;
+        //     ctx.shadowColor = "#000";
+        //     ctx.drawImage(this, 0, 0);
+        // }
+        // img.src = "circle.png";
 
     }
 
-    ctx.strokeStyle = stroke;
-    ctx.fillStyle = fill;
-    let width = ctx.canvas.width,
-        height = ctx.canvas.height
+
 
     // for (var x = 0; x < width; x += minor) {
     //     ctx.beginPath();
@@ -367,14 +402,7 @@ function draw_background(ctx, minor, major, stroke, fill) {
     //     ctx.stroke();
     // }
 
-    for (var y = 0; y < height; y += minor) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(width, y);
-        ctx.lineWidth = (y % major == 0) ? 1 : .5;
-        ctx.stroke();
 
-    }
 
     ctx.restore();
 }

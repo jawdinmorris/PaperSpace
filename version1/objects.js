@@ -1,3 +1,10 @@
+let f = new FontFace('test', 'url(https://fonts.googleapis.com/css?family=Indie+Flower&display=swap)');
+
+f.load().then(function () {
+    // Ready to use the font in a canvas context
+    console.log("font loaded");
+});
+
 function extend(ChildClass, ParentClass) {
     var parent = new ParentClass();
     ChildClass.prototype = parent;
@@ -86,7 +93,8 @@ Asteroid.prototype.draw = function (c, guide) {
     c.rotate(this.angle);
     draw_asteroid(c, this.radius, this.shape, {
         noise: this.noise,
-        guide: guide
+        guide: guide,
+        blur: 20
     });
     c.restore();
 }
@@ -291,7 +299,8 @@ Projectile.prototype.draw = function (c, guide) {
     c.rotate(this.angle);
     draw_asteroid(c, this.radius, this.shape, {
         noise: this.noise,
-        guide: guide
+        guide: guide,
+        blur: 10
     });
     c.restore();
 }
@@ -308,7 +317,7 @@ Indicator.prototype.draw = function (c, max, level) {
     c.save();
     c.strokeStyle = "black";
     c.fillStyle = "black";
-    c.font = this.height + "pt Arial";
+    c.font = this.height * 1.5 + "pt Indie Flower";
     var offset = c.measureText(this.label).width;
     c.fillText(this.label, this.x, this.y + this.height - 1);
     c.beginPath();
@@ -332,7 +341,7 @@ IncrementingIndicator.prototype.draw = function (c, max, level) {
     c.save();
     c.strokeStyle = "black";
     c.fillStyle = "black";
-    c.font = this.height + "pt Arial";
+    c.font = this.height * 1.5 + "pt Indie Flower";
     var offset = c.measureText(this.label).width;
     c.fillText(this.label, this.x, this.y + this.height - 1);
     c.fillStyle = "red";
@@ -362,7 +371,7 @@ function NumberIndicator(label, x, y, options) {
 NumberIndicator.prototype.draw = function (c, value) {
     c.save();
     c.fillStyle = "black";
-    c.font = 15 + "pt Arial";
+    c.font = 20 + "pt Indie Flower";
     c.textAlign = this.align;
     c.fillText(
         this.label + value.toFixed(this.digits),
@@ -383,9 +392,9 @@ Message.prototype.draw = function (c, main, sub) {
     c.save();
     c.fillStyle = this.fill;
     c.textAlign = this.textAlign;
-    c.font = this.main_pt + "pt Arial";
+    c.font = this.main_pt + "pt Indie Flower";
     c.fillText(main, this.x, this.y);
-    c.font = this.sub_pt + "pt Arial";
+    c.font = this.sub_pt + "pt Indie Flower";
     c.fillText(sub, this.x, this.y + this.main_pt);
     c.restore();
 }
