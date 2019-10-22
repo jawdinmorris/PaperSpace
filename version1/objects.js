@@ -269,6 +269,14 @@ function Projectile(mass, lifetime, x, y, x_speed, y_speed, rotation_speed) {
     this.super(mass, radius, x, y, 0, x_speed, y_speed, rotation_speed);
     this.lifetime = lifetime;
     this.life = 1.0;
+    this.circumference = 2 * Math.PI * this.radius;
+    this.segments = Math.ceil(this.circumference / 15);
+    this.segments = Math.min(25, Math.max(5, this.segments));
+    this.noise = 0.3;
+    this.shape = [];
+    for (var i = 0; i < this.segments; i++) {
+        this.shape.push(2 * (Math.random() - 0.5));
+    }
 }
 extend(Projectile, Mass);
 
@@ -281,7 +289,10 @@ Projectile.prototype.draw = function (c, guide) {
     c.save();
     c.translate(this.x, this.y);
     c.rotate(this.angle);
-    draw_projectile(c, this.radius, this.life, guide);
+    draw_asteroid(c, this.radius, this.shape, {
+        noise: this.noise,
+        guide: guide
+    });
     c.restore();
 }
 
