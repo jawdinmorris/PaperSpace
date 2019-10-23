@@ -241,6 +241,7 @@ AsteroidsGame.prototype.draw = function () {
     this.reload_indicator.draw(this.c, this.ship.time_until_reloaded, this.ship.weapon_reload_time);
     this.bomb_reload_indicator.draw(this.c, this.ship.time_until_bomb_reloaded, this.ship.bomb_reload_time);
     this.level_progress_indicator.draw(this.c, this.score - this.baseScore, (this.level * this.asteroid_mass));
+
     if (this.guide) {
         draw_grid(this.c);
         this.asteroids.forEach(function (asteroid) {
@@ -271,6 +272,7 @@ AsteroidsGame.prototype.draw = function () {
     }, this);
     this.ship.draw(this.c, this.guide);
 
+    draw_foreground(this.c)
 
 }
 

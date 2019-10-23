@@ -79,7 +79,7 @@ function Asteroid(mass, x, y, x_speed, y_speed, rotation_speed) {
     this.circumference = 2 * Math.PI * this.radius;
     this.segments = Math.ceil(this.circumference / 15);
     this.segments = Math.min(25, Math.max(5, this.segments));
-    this.noise = 0.5;
+    this.noise = 0.2;
     this.shape = [];
     for (var i = 0; i < this.segments; i++) {
         this.shape.push(2 * (Math.random() - 0.5));
@@ -176,8 +176,8 @@ Ship.prototype.draw = function (c, guide) {
 Ship.prototype.projectile = function (elapsed, density) {
     laserSound.play();
     var p = new Projectile(density, 1,
-        this.x + Math.cos(this.angle) * this.radius,
-        this.y + Math.sin(this.angle) * this.radius,
+        this.x + Math.cos(this.angle) * this.radius * 1.5,
+        this.y + Math.sin(this.angle) * this.radius * 1.5,
         this.x_speed,
         this.y_speed,
         this.rotation_speed);
@@ -297,11 +297,6 @@ Projectile.prototype.draw = function (c, guide) {
     c.save();
     c.translate(this.x, this.y);
     c.rotate(this.angle);
-    // draw_asteroid(c, this.radius, this.shape, {
-    //     noise: this.noise,
-    //     guide: guide,
-    //     blur: 10
-    // });
     draw_projectile(c, this.radius, this.life, guide);
     c.restore();
 }
@@ -327,7 +322,7 @@ Indicator.prototype.draw = function (c, max, level) {
     // c.rect(offset + this.x, this.y, this.width, this.height);
     rc.rectangle(offset + this.x, this.y, this.width, this.height, {
         roughness: 1,
-        fill: "white",
+        fill: "black",
         fillStyle: "solid",
         fillWeight: 3,
         hachureAngle: 60, // angle of hachure,
@@ -338,9 +333,11 @@ Indicator.prototype.draw = function (c, max, level) {
     c.rect(offset + this.x, this.y, this.width * (max / level), this.height);
     rc.rectangle(offset + this.x, this.y, this.width * (max / level), this.height, {
         roughness: 2,
+        fillStyle: "solid",
         fill: "red",
         stroke: "red"
     })
+
     c.fill();
     c.restore()
 }
@@ -362,28 +359,24 @@ IncrementingIndicator.prototype.draw = function (c, max, level) {
     c.font = this.height * 1.5 + "pt Indie Flower";
     var offset = c.measureText(this.label).width;
     c.fillText(this.label, this.x, this.y + this.height - 1);
-    c.fillStyle = "red";
     c.beginPath();
-    c.rect(offset + this.x, this.y, this.width, this.height);
+    // c.rect(offset + this.x, this.y, this.width, this.height);
     rc.rectangle(offset + this.x, this.y, this.width, this.height, {
         roughness: 1,
-        bowing: 1,
-        fill: "red"
+        fill: "red",
+        fillStyle: "solid",
+        fillWeight: 3,
+        hachureAngle: 60, // angle of hachure,
+        hachureGap: 8
     })
     c.stroke();
     c.beginPath();
-    // c.rect(offset + this.x, this.y, this.width, this.height);
-    rc.rectangle(offset + this.x, this.y, this.width * (max / level), this.height, {
-        roughness: 1,
-        fill: "black"
-    })
-    c.fill();
-    c.beginPath();
-    c.fillStyle = "black";
     c.rect(offset + this.x, this.y, this.width * (max / level), this.height);
-    rc.rectangle(offset + this.x, this.y, this.width * (max / level), this.height, {
-        roughness: 1,
-        fill: "black"
+    rc.rectangle(offset + this.x + this.width, this.y, this.width / (-level / max), this.height, {
+        roughness: 2,
+        fill: "black",
+        fillStyle: 'solid',
+        stroke: "red"
     })
     c.fill();
     c.restore()

@@ -3,8 +3,13 @@
 body {
     text-align: center;
     font-family: sans-serif;
+    outline-style: none;
 }
 
 canvas {
     background-color: black;
+}
+
+:focus {
+    outline: none;
 }

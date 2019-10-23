@@ -1,3 +1,10 @@
+var randomY = []
+var randomX = []
+for (var i = 0; i < 12; i++) {
+    randomY[i] = Math.random() * 600
+    randomX[i] = Math.random() * 600
+}
+
 function draw_grid(ctx, minor, major, stroke, fill) {
     minor = minor || 10;
     major = major || minor * 5;
@@ -59,7 +66,7 @@ function draw_ship(ctx, radius, options) {
     }
     if (options.thruster) {
         ctx.save();
-        ctx.strokeStyle = "yellow";
+        ctx.strokeStyle = "red";
         ctx.fillStyle = "red";
         ctx.lineWidth = 3;
         ctx.beginPath();
@@ -71,12 +78,12 @@ function draw_ship(ctx, radius, options) {
             Math.cos(Math.PI - angle * 0.8) * radius / 2,
             Math.sin(Math.PI - angle * 0.8) * radius / 2
         );
-        ctx.fill();
+        // ctx.fill();
         ctx.stroke();
         ctx.restore();
     }
-    ctx.lineWidth = options.lineWidth || 2;
-    ctx.strokeStyle = options.stroke || "white";
+    ctx.lineWidth = options.lineWidth || 3;
+    ctx.strokeStyle = options.stroke || "black";
     ctx.fillStyle = options.fill || "black";
 
     ctx.beginPath();
@@ -97,9 +104,10 @@ function draw_ship(ctx, radius, options) {
         radius, 0
     );
 
-    ctx.fill();
-    ctx.stroke();
+    // ctx.fill();
 
+    ctx.stroke();
+    // draw_rough_ship(radius, ctx);
     if (options.guide) {
         ctx.strokeStyle = "white";
         ctx.fillStyle = "white";
@@ -153,23 +161,46 @@ function draw_asteroid(ctx, radius, shape, options) {
     ctx.shadowInset = true;
     ctx.shadowBlur = 20;
     ctx.shadowColor = "#000";
-    // ctx.beginPath();
-    for (let i = 0; i < shape.length; i++) {
-        if (i > 1) {
-            var last_point = radius + radius * noise * shape[i - 1]
-        }
-        ctx.rotate(2 * Math.PI / shape.length);
-        rc.line(last_point / 2, last_point, -10, radius + radius * noise * shape[i] / 2, {
-            fill: "black",
-            stroke: "black"
+    ctx.lineWidth = 1;
+    if (radius > 60) {
+        rc.ellipse(0, 0, radius * 2.2, radius * 2.2, {
+            fillStyle: "zig-zag",
+            fill: "rgb(" + ((255 * radius) % 120) + "%," + ((100 * radius) % 255) + "%," + ((100 * radius) % 50) + "%)",
+            fillWeight: 1,
+            stroke: "rgba(0,0,0,0)"
         });
-        // ctx.lineTo(radius + radius * noise * shape[i], 0);
+    } else {
+        rc.ellipse(0, 0, radius * 2.2, radius * 1.8, {
+            fillStyle: "zig-zag",
+            fill: "rgb(" + ((255 * radius) % 120) + "%," + ((100 * radius) % 255) + "%," + ((100 * radius) % 50) + "%)",
+            fillWeight: 1,
+            stroke: "rgba(0,0,0,0)"
+        });
+    }
+    ctx.beginPath();
+    for (let i = 0; i < shape.length; i++) {
+        ctx.rotate(2 * Math.PI / shape.length);
+        ctx.lineTo(radius + radius * noise * shape[i], 0);
+
     }
     ctx.closePath();
     ctx.fillStyle = "rgb(" + ((255 * radius) % 120) + "%," + ((100 * radius) % 255) + "%," + ((100 * radius) % 50) + "%)";
+    ctx.fillStyle = "rgba(0,0,0,0)"
     ctx.fill();
-    // ctx.strokeStyle = "black"
-    // ctx.stroke();
+
+    // for (i = -3; i < 3; i++) {
+    //     rc.ellipse(radius / i, radius / i, radius / i, radius / i, {
+    //         fill: "rgb(10,150,10)",
+    //         fillWeight: 3,
+    //         stroke: "rgba(0,0,0,0)"
+    //     });
+    // }
+
+
+    // draw_rough_circle(radius)
+    ctx.strokeStyle = "black"
+    ctx.lineWidth = 3;
+    ctx.stroke();
     if (options.guide) {
         ctx.lineWidth = 0.5;
         ctx.beginPath();
@@ -239,6 +270,18 @@ function draw_bomb(ctx, radius, lifetime, options) {
     ctx.stroke();
     ctx.shadowInset = false;
     ctx.restore();
+}
+
+function draw_rough_star(x, y) {
+    const rc = rough.canvas(document.getElementById('asteroids'));
+    rc.linearPath([
+        [0 + x, -15 + y],
+        [10 + x, 0 + y],
+        [-5 + x, -10 + y],
+        [5 + x, -10 + y],
+        [-5 + x, 0 + y],
+        [0 + x, -15 + y]
+    ]);
 }
 
 function draw_star_shape(ctx, cx, cy, spikes, innerRadius, outerRadius, stroke, fill) {
@@ -361,6 +404,7 @@ function draw_background(ctx, minor, major, stroke, fill) {
     fill = fill || "#009900";
     ctx.strokeStyle = stroke;
     ctx.fillStyle = fill;
+
     let width = ctx.canvas.width,
         height = ctx.canvas.height
     // if (Math.random() > 0.98) {
@@ -385,11 +429,24 @@ function draw_background(ctx, minor, major, stroke, fill) {
         ctx.stroke();
 
     }
+
+
     for (var i = 0; i < 12; i++) {
         ctx.beginPath();
+        ctx.fillStyle = "#dbdbce"
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "black";
         ctx.arc(25, 25 + (i * 50), 20, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.arc(25, 25 + (i * 50), 18, 0, Math.PI * 2);
+        ctx.arc(25, 25 + (i * 50), 16, 0, Math.PI * 2);
         ctx.closePath();
+
+        ctx.stroke();
+        // ctx.fill();
+        ctx.beginPath();
+        ctx.arc(25, 25 + (i * 50), 14, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.fill();
         // draw in image to main canvas
         // var img = new Image;
         // img.onload = function () {
@@ -399,7 +456,9 @@ function draw_background(ctx, minor, major, stroke, fill) {
         //     ctx.drawImage(this, 0, 0);
         // }
         // img.src = "circle.png";
-
+        if (i % 2 == 0) {
+            draw_rough_star(randomX[i], randomY[i]);
+        }
     }
 
 
@@ -412,17 +471,68 @@ function draw_background(ctx, minor, major, stroke, fill) {
     //     ctx.stroke();
     // }
 
-
-
     ctx.restore();
+}
+
+function draw_foreground(ctx) {
+    for (var i = 0; i < 12; i++) {
+        ctx.beginPath();
+        ctx.fillStyle = "#dbdbce"
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "black";
+        ctx.arc(25, 25 + (i * 50), 20, 0, Math.PI * 2);
+        ctx.arc(25, 25 + (i * 50), 18, 0, Math.PI * 2);
+        ctx.arc(25, 25 + (i * 50), 16, 0, Math.PI * 2);
+        ctx.closePath();
+
+        ctx.stroke();
+        // ctx.fill();
+        ctx.beginPath();
+        ctx.arc(25, 25 + (i * 50), 14, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.fill();
+        // draw in image to main canvas
+        // var img = new Image;
+        // img.onload = function () {
+        //     ctx.shadowInset = true;
+        //     ctx.shadowBlur = 25;
+        //     ctx.shadowColor = "#000";
+        //     ctx.drawImage(this, 0, 0);
+        // }
+        // img.src = "circle.png";
+
+    }
 }
 
 function draw_rough_circle(radius) {
     const rc = rough.canvas(document.getElementById('asteroids'));
     rc.circle(0, 0, radius, {
-        fill: "rgb(10,150,10)",
+        fill: "red",
         fillWeight: 3 // thicker lines for hachure
     });
+}
+
+function draw_rough_ship(radius, ctx) {
+    const rc = rough.canvas(document.getElementById('asteroids'));
+    ctx.rotate(245 * Math.PI / 180)
+    rc.path('m35.620882,1.197892l-14.094948,-5.593808l11.354163,-28.602643c1.013765,-2.552514 -0.231717,-5.448984 -2.791473,-6.462749c-2.559755,-1.013765 -5.452605,0.235338 -6.462749,2.791473l-11.354163,28.602643l-17.668468,-7.013079l11.350543,-28.602642c1.017385,-2.556135 -0.231718,-5.452605 -2.787853,-6.46637c-2.556135,-1.010144 -5.452605,0.235338 -6.462749,2.791473l-11.354163,28.602643l-14.087706,-5.590187l-5.843629,14.721309l7.784264,3.091982l-9.185431,23.139176c-2.208559,5.575705 0.517744,11.886389 6.093449,14.102189l5.887075,2.3389l-3.175255,7.990637c-1.473579,3.711102 0.343956,7.921845 4.062299,9.399045l3.367147,1.335997c3.714723,1.4772 7.921846,-0.343956 9.399045,-4.058679l3.175256,-7.990637l6.727052,2.668373c5.575705,2.212179 11.89001,-0.514123 14.105809,-6.089828l9.17819,-23.139176l6.944287,2.755267l5.840008,-14.721309z', {
+        stroke: 'black',
+        strokeWidth: 2,
+        roughness: 0.3,
+        fillStyle: 'solid',
+        fill: "white"
+    });
+    rc.circle(-5, 10, 20, {
+        fillStyle: 'solid',
+        fill: 'white',
+        roughness: 0,
+    })
+    rc.circle(-5, 10, 20, {
+        fill: 'green',
+        roughness: 2,
+    })
+
+
 }
 //PACMAN
 function draw_pacman(ctx, radius, openValue) {
