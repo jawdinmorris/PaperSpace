@@ -108,6 +108,7 @@ Asteroid.prototype.child = function (mass) {
 function Ship(x, y, power, weapon_power) {
     this.thruster_power = power * 10;
     this.steering_power = this.thruster_power / 20;
+    this.max_steer = 100;
     this.right_thruster = false;
     this.left_thruster = false;
     this.thruster_on = false;
@@ -130,14 +131,21 @@ function Ship(x, y, power, weapon_power) {
 extend(Ship, Mass);
 
 Ship.prototype.update = function (elapsed, c) {
-    this.push(this.angle,
-        this.thruster_on * this.thruster_power, elapsed);
+    if (this.rotation_speed < 100) {
+        this.push(this.angle,
+            this.thruster_on * this.thruster_power, elapsed);
+    }
     this.push(-this.angle,
         this.retro_thruster * this.thruster_power, elapsed);
-    this.twist(
-        (this.right_thruster - this.left_thruster) * this.steering_power, elapsed
-    );
-
+    if ((this.rotation_speed >= -10 && this.rotation_speed <= 10)) {
+        this.twist(
+            (this.right_thruster - this.left_thruster) * this.steering_power, elapsed
+        );
+    } else if (this.rotation_speed < -10) {
+        this.rotation_speed = this.rotation_speed + 1;
+    } else if (this.rotation_speed > 10) {
+        this.rotation_speed = this.rotation_speed - 1;
+    }
     this.loaded = this.time_until_reloaded === 0;
     if (!this.loaded) {
         this.time_until_reloaded -= Math.min(elapsed, this.time_until_reloaded);

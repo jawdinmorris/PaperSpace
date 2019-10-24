@@ -192,7 +192,7 @@ AsteroidsGame.prototype.update = function (elapsed) {
                     projectiles.splice(i, 1);
                     this.asteroids.splice(j, 1);
                     this.split_asteroid(asteroid, elapsed);
-                    asteroidCount = asteroidCount + 1;
+                    this.asteroidCount = this.asteroidCount + 1;
                     plopSound.play()
                 }
             }, this);
@@ -268,8 +268,8 @@ AsteroidsGame.prototype.draw = function () {
 
 
     if (this.game_over) {
-        // kongregate.stats.submit("score", this.score);
-        // kongregate.stats.submit("asteroids", this.asteroidCount);
+        kongregate.stats.submit("score", this.score);
+        kongregate.stats.submit("asteroids", this.asteroidCount);
 
         this.message.draw(this.c, "GAME OVER", "Press R to Reset");
         return;
@@ -299,9 +299,9 @@ AsteroidsGame.prototype.split_asteroid = function (asteroid, elapsed) {
         if (child.mass < this.mass_destroyed * 2) {
             this.score += child.mass;
 
-            if (Math.random() > .01) {
+            if (Math.random() > .99) {
                 this.drop_powerup(child.x, child.y, "health");
-            } else if (Math.random() > .90) {
+            } else if (Math.random() > .01) {
                 this.drop_powerup(child.x, child.y, "doubleBullets");
             }
         } else {

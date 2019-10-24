@@ -283,7 +283,7 @@ function draw_bullet_powerup(ctx, radius, lifetime) {
     //     ringRadius = easeOutCubic(ringCounter - 100, 15, -15, 100);
 
     // }
-    // ctx.save();
+    ctx.save();
     // // set the context styles
     // ctx.lineWidth = 3;
 
@@ -292,44 +292,124 @@ function draw_bullet_powerup(ctx, radius, lifetime) {
     // ctx.closePath();
     // ctx.fill()
     // ctx.stroke();
-    // ctx.restore();
+    draw_rough_bullet_upgrade(ctx);
+    ctx.restore();
 
-    draw_star_shape(ctx, 0, 0, 5, 10, 20, "gold", "purple");
 
 
 }
 
-function draw_rough_heart(ctx, x, y) {
+function draw_rough_bullet_upgrade(ctx, x, y) {
     const rc = rough.canvas(document.getElementById('asteroids'));
+    var x = 50;
+    var y = 160;
     var points = [
-        [0 + x, 0 + y],
-        [8 + x, -20 + y],
-        [16 + x, -16 + y],
-        [24 + x, -4 + y],
-        [20 + x, 16 + y],
-        [0 + x, 32 + y],
-        [-20 + x, 16 + y],
-        [-24 + x, -4 + y],
-        [-16 + x, -16 + y],
-        [-8 + x, -20 + y],
-        [0 + x, 0 + y]
-    ]
+        [50 - x, 160 - y],
+        [55 - x, 180 - y],
+        [70 - x, 180 - y],
+        [60 - x, 190 - y],
+        [65 - x, 205 - y],
+        [50 - x, 195 - y],
+        [35 - x, 205 - y],
+        [40 - x, 190 - y],
+        [30 - x, 180 - y],
+        [45 - x, 180 - y],
+        [50 - x, 160 - y]
+    ];
+    // for (let i = 0; i < 20; i++) {
+    //     let x = (400 / 20) * i + 10;
+    //     let xdeg = (Math.PI / 100) * x;
+    //     let y = Math.round(Math.sin(xdeg) * 90) + 500;
+    //     points.push([x, y]);
+    // }
+
     rc.curve(points, {
-        stroke: 'red',
+        stroke: 'purple',
         strokeWidth: 2,
         fill: 'black',
         fillStyle: 'solid'
     });
 }
 
+function draw_rough_heart(ctx, x, y) {
+    const rc = rough.canvas(document.getElementById('asteroids'));
+    // var x = 0;
+    // var y = 0;
+    // var points = [
+    //     [0 + x, 0 + y],
+    //     [8 + x, -20 + y],
+    //     [16 + x, -16 + y],
+    //     [24 + x, -4 + y],
+    //     [20 + x, 16 + y],
+    //     [0 + x, 32 + y],
+    //     [-20 + x, 16 + y],
+    //     [-24 + x, -4 + y],
+    //     [-16 + x, -16 + y],
+    //     [-8 + x, -20 + y],
+    //     [0 + x, 0 + y]
+    // ];
+    var points = draw_heart_equation(ctx, x, y);
+    rc.curve(points, {
+        stroke: 'red',
+        strokeWidth: 2,
+        fill: 'black',
+        fillStyle: 'solid'
+    });
+
+
+}
+
+function draw_heart_equation(ctx, x2, y2) {
+    var context = ctx;
+    // var i = 0;
+    // var j = 0.1
+    var t = 0;
+    var points = [];
+    for (var i = 0; i < 6.5; i = i + 0.1) {
+        t = t + 1;
+        // i = i + j;
+        if (t > 5) {
+            t = 0;
+        }
+        var r = Math.pow(10000 * Math.cos(2 * i), 0.5);
+        var x = (160 * Math.sin(i) * Math.sin(i) * Math.sin(i)) * 0.2;
+        var y = (-(10 * (13 * Math.cos(i) - 5 * Math.cos(2 * i) - 2 * Math.cos(3 * i) - Math.cos(4 * i))) * 0.2);
+        // context.font = "40px Georgia";
+        // context.textAlign = 'center';
+        // context.fillText('.', x, y);
+        // context.fillStyle = 'purple';
+        // context.beginPath();
+        // context.moveTo(250, 200);
+        // context.lineTo(x, y);
+        // context.lineCap = 'round';
+        // context.strokeStyle = 'rgba(0,0,255,0.6)';
+        // context.stroke();
+        // context.beginPath();
+        // context.moveTo(250, 200);
+        // context.arc(x, y, 8, 0, 2 * Math.PI);
+        // context.fillStyle = "red";
+        // context.fill();
+        points.push([x, y]);
+        if (i > 6.5) {
+            j = -0.1;
+            context.clearRect(0, 0, 500, 400);
+        }
+        if (i < -0.1) {
+            j = 0.1;
+            context.clearRect(0, 0, 500, 400);
+        }
+    }
+    return points;
+}
+
 function draw_health_powerup(ctx, radius, lifetime) {
     // variables used to draw & animate the ring
-    ctx.lineWidth = 0;
-    ctx.strokeStyle = "black";
-    ctx.fillStyle = "red";
+    // ctx.lineWidth = 0;
+    // ctx.strokeStyle = "black";
+    // ctx.fillStyle = "red";
     ctx.save();
 
-    //triangle
+    // triangle
     // ctx.beginPath();
     // ctx.moveTo(0, 8);
     // ctx.lineTo(32.5, 8);
@@ -492,6 +572,7 @@ function draw_rough_circle(radius) {
 function draw_rough_ship(radius, ctx) {
     const rc = rough.canvas(document.getElementById('asteroids'));
     ctx.rotate(245 * Math.PI / 180)
+
     rc.path('m35.620882,1.197892l-14.094948,-5.593808l11.354163,-28.602643c1.013765,-2.552514 -0.231717,-5.448984 -2.791473,-6.462749c-2.559755,-1.013765 -5.452605,0.235338 -6.462749,2.791473l-11.354163,28.602643l-17.668468,-7.013079l11.350543,-28.602642c1.017385,-2.556135 -0.231718,-5.452605 -2.787853,-6.46637c-2.556135,-1.010144 -5.452605,0.235338 -6.462749,2.791473l-11.354163,28.602643l-14.087706,-5.590187l-5.843629,14.721309l7.784264,3.091982l-9.185431,23.139176c-2.208559,5.575705 0.517744,11.886389 6.093449,14.102189l5.887075,2.3389l-3.175255,7.990637c-1.473579,3.711102 0.343956,7.921845 4.062299,9.399045l3.367147,1.335997c3.714723,1.4772 7.921846,-0.343956 9.399045,-4.058679l3.175256,-7.990637l6.727052,2.668373c5.575705,2.212179 11.89001,-0.514123 14.105809,-6.089828l9.17819,-23.139176l6.944287,2.755267l5.840008,-14.721309z', {
         stroke: 'black',
         strokeWidth: 2,

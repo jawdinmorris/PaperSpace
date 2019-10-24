@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="styles.css">
-    <script src='http://www.kongregate.com/javascripts/kongregate_api.js'></script>
+    <script src='https://www.kongregate.com/javascripts/kongregate_api.js'></script>
     <script src="roughjs/rough.js"></script>
     <script src="drawing.js"></script>
     <script src="objects.js"></script>
@@ -19,6 +19,7 @@
     <canvas id="asteroids" width="600" height="600" tabindex="1"></canvas>
     <script>
         'use strict';
+        var game = new AsteroidsGame("asteroids");
         // Load the API
         var kongregate;
         kongregateAPI.loadAPI(onComplete);
@@ -30,6 +31,7 @@
             var game = new AsteroidsGame("asteroids");
         }
     </script>
+
 </body>
 
 </html>
