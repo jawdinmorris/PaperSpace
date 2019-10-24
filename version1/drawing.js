@@ -73,7 +73,6 @@ function draw_ship(ctx, radius, options) {
             Math.cos(Math.PI - angle * 0.8) * radius / 2,
             Math.sin(Math.PI - angle * 0.8) * radius / 2
         );
-        // ctx.fill();
         ctx.stroke();
         ctx.restore();
     }
@@ -99,14 +98,8 @@ function draw_ship(ctx, radius, options) {
         radius, 0
     );
 
-    // ctx.fill();
-
     ctx.stroke();
-    // draw_rough_ship(radius, ctx);
-
-
     ctx.restore();
-    // ctx.shadowInset = false;
 }
 
 function draw_asteroid(ctx, radius, shape, options) {
@@ -148,16 +141,6 @@ function draw_asteroid(ctx, radius, shape, options) {
     ctx.fillStyle = "rgba(0,0,0,0)"
     ctx.fill();
 
-    // for (i = -3; i < 3; i++) {
-    //     rc.ellipse(radius / i, radius / i, radius / i, radius / i, {
-    //         fill: "rgb(10,150,10)",
-    //         fillWeight: 3,
-    //         stroke: "rgba(0,0,0,0)"
-    //     });
-    // }
-
-
-    // draw_rough_circle(radius)
     ctx.strokeStyle = "black"
     ctx.lineWidth = 3;
     ctx.stroke();
@@ -168,29 +151,6 @@ function draw_asteroid(ctx, radius, shape, options) {
 }
 
 function draw_projectile(ctx, radius, lifetime, options) {
-    // options = options || {};
-    // ctx.shadowBlur = 0;
-    // ctx.shadowInset = true;
-    // ctx.shadowColor = "#000";
-    // ctx.save();
-    // ctx.beginPath();
-    // ctx.fillStyle = "rgb(100%, 100%," + (100 * lifetime) + "%)";
-    // ctx.strokeStyle = "blue";
-    // ctx.arc(0, 0, radius, 0, 2 * Math.PI);
-    // ctx.closePath();
-    // if (options.guide) {
-    //     ctx.strokeStyle = "white";
-    //     ctx.fillStyle = "rgba(0, 0, 0, 0.25)";
-    //     ctx.lineWidth = 0.5;
-    //     ctx.beginPath();
-    //     ctx.arc(0, 0, radius, 0, 2 * Math.PI);
-    //     ctx.stroke();
-    //     ctx.fill();
-    // }
-    // ctx.fill();
-    // ctx.stroke();
-    // ctx.restore();
-    // ctx.shadowInset = false;
     draw_rough_circle(radius * 2);
 }
 
@@ -267,31 +227,8 @@ function draw_star_shape(ctx, cx, cy, spikes, innerRadius, outerRadius, stroke, 
 }
 
 function draw_bullet_powerup(ctx, radius, lifetime) {
-    // // variables used to draw & animate the ring
-    // var PI2 = Math.PI * 2;
-    // var ringX, ringY, ringRadius, ingCounter, ringCounterVelocity;
-    // ringX = 0;
-    // ringY = 0;
-    // ringRadius = radius;
-    // ringCounter = lifetime * 150;
-    // ringCounterVelocity = 0.5;
-    // if (ringCounter < 200) {
-    //     // expand the ring using easeInCubic easing
-    //     ringRadius = easeInCubic(ringCounter, 0, 15, 100);
-    // } else {
-    //     // shrink the ring using easeOutCubic easing
-    //     ringRadius = easeOutCubic(ringCounter - 100, 15, -15, 100);
 
-    // }
     ctx.save();
-    // // set the context styles
-    // ctx.lineWidth = 3;
-
-    // ctx.beginPath();
-    // ctx.arc(ringX, ringY, ringRadius, 0, PI2);
-    // ctx.closePath();
-    // ctx.fill()
-    // ctx.stroke();
     draw_rough_bullet_upgrade(ctx);
     ctx.restore();
 
@@ -316,12 +253,6 @@ function draw_rough_bullet_upgrade(ctx, x, y) {
         [45 - x, 180 - y],
         [50 - x, 160 - y]
     ];
-    // for (let i = 0; i < 20; i++) {
-    //     let x = (400 / 20) * i + 10;
-    //     let xdeg = (Math.PI / 100) * x;
-    //     let y = Math.round(Math.sin(xdeg) * 90) + 500;
-    //     points.push([x, y]);
-    // }
 
     rc.curve(points, {
         stroke: 'purple',
@@ -333,21 +264,6 @@ function draw_rough_bullet_upgrade(ctx, x, y) {
 
 function draw_rough_heart(ctx, x, y) {
     const rc = rough.canvas(document.getElementById('asteroids'));
-    // var x = 0;
-    // var y = 0;
-    // var points = [
-    //     [0 + x, 0 + y],
-    //     [8 + x, -20 + y],
-    //     [16 + x, -16 + y],
-    //     [24 + x, -4 + y],
-    //     [20 + x, 16 + y],
-    //     [0 + x, 32 + y],
-    //     [-20 + x, 16 + y],
-    //     [-24 + x, -4 + y],
-    //     [-16 + x, -16 + y],
-    //     [-8 + x, -20 + y],
-    //     [0 + x, 0 + y]
-    // ];
     var points = draw_heart_equation(ctx, x, y);
     rc.curve(points, {
         stroke: 'red',
@@ -361,34 +277,16 @@ function draw_rough_heart(ctx, x, y) {
 
 function draw_heart_equation(ctx, x2, y2) {
     var context = ctx;
-    // var i = 0;
-    // var j = 0.1
     var t = 0;
     var points = [];
     for (var i = 0; i < 6.5; i = i + 0.1) {
         t = t + 1;
-        // i = i + j;
         if (t > 5) {
             t = 0;
         }
         var r = Math.pow(10000 * Math.cos(2 * i), 0.5);
         var x = (160 * Math.sin(i) * Math.sin(i) * Math.sin(i)) * 0.2;
         var y = (-(10 * (13 * Math.cos(i) - 5 * Math.cos(2 * i) - 2 * Math.cos(3 * i) - Math.cos(4 * i))) * 0.2);
-        // context.font = "40px Georgia";
-        // context.textAlign = 'center';
-        // context.fillText('.', x, y);
-        // context.fillStyle = 'purple';
-        // context.beginPath();
-        // context.moveTo(250, 200);
-        // context.lineTo(x, y);
-        // context.lineCap = 'round';
-        // context.strokeStyle = 'rgba(0,0,255,0.6)';
-        // context.stroke();
-        // context.beginPath();
-        // context.moveTo(250, 200);
-        // context.arc(x, y, 8, 0, 2 * Math.PI);
-        // context.fillStyle = "red";
-        // context.fill();
         points.push([x, y]);
         if (i > 6.5) {
             j = -0.1;
@@ -403,33 +301,7 @@ function draw_heart_equation(ctx, x2, y2) {
 }
 
 function draw_health_powerup(ctx, radius, lifetime) {
-    // variables used to draw & animate the ring
-    // ctx.lineWidth = 0;
-    // ctx.strokeStyle = "black";
-    // ctx.fillStyle = "red";
     ctx.save();
-
-    // triangle
-    // ctx.beginPath();
-    // ctx.moveTo(0, 8);
-    // ctx.lineTo(32.5, 8);
-    // ctx.quadraticCurveTo(32, 20, 16, 32)
-    // ctx.quadraticCurveTo(-2, 20, 0, 8)
-    // ctx.closePath();
-    // ctx.fill();
-
-    // //top left circle
-    // ctx.beginPath();
-    // ctx.arc(8, 9, 8, 0, Math.PI * 2, true);
-    // ctx.closePath()
-    // ctx.fill();
-
-    // //top right circle
-    // ctx.beginPath();
-    // ctx.arc(24, 9, 8, 0, Math.PI * 2, true);
-    // ctx.closePath();
-    // ctx.fill();
-
     draw_rough_heart(ctx, 0, 0);
     ctx.restore();
 }
@@ -460,15 +332,7 @@ function draw_background(ctx, minor, major, stroke, fill) {
 
     let width = ctx.canvas.width,
         height = ctx.canvas.height
-    // if (Math.random() > 0.98) {
-    //     minor = 9;
-    //     major = minor * 5;
-    //     stroke = "green";
-    // } else if (Math.random() > 0.99) {
-    //     minor = 8;
-    //     major = minor * 5;
-    //     stroke = "red";
-    // }
+
     ctx.save();
     ctx.fillStyle = '#fffff0';
     ctx.fillRect(0, 0, 600, 600);
@@ -477,7 +341,6 @@ function draw_background(ctx, minor, major, stroke, fill) {
         ctx.beginPath();
         ctx.moveTo(0, y);
         ctx.quadraticCurveTo(width / 2, y - 10, width, y)
-        // ctx.lineTo(width, y);
         ctx.lineWidth = (y % major == 0) ? 1 : .5;
         ctx.stroke();
 
@@ -495,20 +358,11 @@ function draw_background(ctx, minor, major, stroke, fill) {
         ctx.closePath();
 
         ctx.stroke();
-        // ctx.fill();
         ctx.beginPath();
         ctx.arc(25, 25 + (i * 50), 14, 0, Math.PI * 2);
         ctx.closePath();
         ctx.fill();
-        // draw in image to main canvas
-        // var img = new Image;
-        // img.onload = function () {
-        //     ctx.shadowInset = true;
-        //     ctx.shadowBlur = 25;
-        //     ctx.shadowColor = "#000";
-        //     ctx.drawImage(this, 0, 0);
-        // }
-        // img.src = "circle.png";
+
         if (i % 1 == 0) {
             ctx.save();
             ctx.rotate((i * 5) * Math.PI / 180);
@@ -517,16 +371,6 @@ function draw_background(ctx, minor, major, stroke, fill) {
             ctx.restore();
         }
     }
-
-
-
-    // for (var x = 0; x < width; x += minor) {
-    //     ctx.beginPath();
-    //     ctx.moveTo(x, 0);
-    //     ctx.lineTo(x, height);
-    //     ctx.lineWidth = (x % major == 0) ? 0.5 : 0.25;
-    //     ctx.stroke();
-    // }
 
     ctx.restore();
 }
@@ -543,20 +387,10 @@ function draw_foreground(ctx) {
         ctx.closePath();
 
         ctx.stroke();
-        // ctx.fill();
         ctx.beginPath();
         ctx.arc(25, 25 + (i * 50), 14, 0, Math.PI * 2);
         ctx.closePath();
         ctx.fill();
-        // draw in image to main canvas
-        // var img = new Image;
-        // img.onload = function () {
-        //     ctx.shadowInset = true;
-        //     ctx.shadowBlur = 25;
-        //     ctx.shadowColor = "#000";
-        //     ctx.drawImage(this, 0, 0);
-        // }
-        // img.src = "circle.png";
 
     }
 }
