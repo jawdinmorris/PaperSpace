@@ -16,36 +16,20 @@
 </head>
 
 <body>
-    <h1>Asteroids V0.1.4</h1>
     <canvas id="asteroids" width="600" height="600" tabindex="1"></canvas>
     <script>
         'use strict';
-        var game = new AsteroidsGame("asteroids");
+        // Load the API
+        var kongregate;
+        kongregateAPI.loadAPI(onComplete);
+
+        // Callback function
+        function onComplete() {
+            // Set the global kongregate API object
+            kongregate = kongregateAPI.getAPI();
+            var game = new AsteroidsGame("asteroids");
+        }
     </script>
-    <ul><strong><em>Changelog:</em></strong>
-        <li>PLANNED: V0.1.5</li>
-        <li>-Paper Graphics</li>
-        <li>-UI Graphics</li>
-        <li></li>
-        <li>COMPLETE: V0.1.4</li>
-        <li>-Basic Sounds</li>
-        <li></li>
-        <li>COMPLETE: V0.1.3 </li>
-        <li>-Backwards Thruster</li>
-        <li>-Level Progress</li>
-        <li></li>
-        <li>COMPLETE: V0.1.2 </li>
-        <li>-Double Bullet Powerup</li>
-        <li>-Health Powerup</li>
-        <li></li>
-        <li>COMPLETE: V0.1.1 </li>
-        <li>-Bombs Added</li>
-        <li>-Labels Added</li>
-        <li>-Asteroids Coloured</li>
-        <li></li>
-        <li>COMPLETE: V0.1.0: </li>
-        <li>-Game Live</li>
-    </ul>
 </body>
 
 </html>
