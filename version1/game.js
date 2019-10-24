@@ -1,3 +1,5 @@
+var mute = false;
+
 function collision(obj1, obj2) {
     return distance_between(obj1, obj2) < (obj1.radius + obj2.radius);
 }
@@ -36,6 +38,7 @@ var AsteroidsGame = function (id) {
         align: "center"
     });
     this.message = new Message(this.canvas.width / 2, this.canvas.height * 0.4);
+
     this.canvas.addEventListener("keydown", this.keyDown.bind(this), true);
     this.canvas.addEventListener("keyup", this.keyUp.bind(this), true);
     window.requestAnimationFrame(this.frame.bind(this));
@@ -129,6 +132,11 @@ AsteroidsGame.prototype.key_handler = function (e, value) {
         case 32: //spacebar
             this.ship.trigger = value;
             break;
+        case "m":
+        case 77:
+            if (value) mute = !mute
+            console.log(mute)
+            break;
         case "r":
         case 82: // r for reset
             if (this.game_over) {
@@ -137,17 +145,16 @@ AsteroidsGame.prototype.key_handler = function (e, value) {
             } else {
                 break;
             }
-            break;
-        case "b":
-        case 66: // b for bomb
-            this.ship.bombTrigger = value;
-            break;
-        case "g":
-        case 71: // g for guide
-            if (value) this.guide = !this.guide;
-            break;
-        default:
-            nothing_handled = true;
+            case "b":
+            case 66: // b for bomb
+                this.ship.bombTrigger = value;
+                break;
+            case "g":
+            case 71: // g for guide
+                if (value) this.guide = !this.guide;
+                break;
+            default:
+                nothing_handled = true;
     }
     if (!nothing_handled) e.preventDefault();
 }
@@ -171,7 +178,7 @@ AsteroidsGame.prototype.update = function (elapsed) {
         asteroid.update(elapsed, this.c);
         if (collision(asteroid, this.ship)) {
             this.ship.compromised = true;
-            if (!this.game_over) {
+            if (!this.game_over && !mute) {
                 shipCollisionSound.play();
             }
         }
@@ -193,7 +200,9 @@ AsteroidsGame.prototype.update = function (elapsed) {
                     this.asteroids.splice(j, 1);
                     this.split_asteroid(asteroid, elapsed);
                     this.asteroidCount = this.asteroidCount + 1;
-                    plopSound.play()
+                    if (!mute) {
+                        plopSound.play()
+                    }
                 }
             }, this);
         }
@@ -209,7 +218,9 @@ AsteroidsGame.prototype.update = function (elapsed) {
                     bombs.splice(i, 1);
                     this.asteroids.splice(j, 1);
                     this.split_asteroid(asteroid, elapsed);
-                    plopSound.play();
+                    if (!mute) {
+                        plopSound.play();
+                    }
                 }
             }, this);
         }
