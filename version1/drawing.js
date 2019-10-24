@@ -1,8 +1,11 @@
+function randomIntFromInterval(min, max) { // min and max included 
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
 var randomY = []
 var randomX = []
 for (var i = 0; i < 12; i++) {
-    randomY[i] = Math.random() * 600
-    randomX[i] = Math.random() * 600
+    randomY[i] = randomIntFromInterval(100, 500)
+    randomX[i] = randomIntFromInterval(100, 500)
 }
 
 function draw_grid(ctx, minor, major, stroke, fill) {
@@ -55,15 +58,7 @@ function draw_ship(ctx, radius, options) {
 
     ctx.save();
 
-    if (options.guide) {
-        ctx.strokeStyle = "white";
-        ctx.fillStyle = "rgba(0, 0, 0, 0.25)";
-        ctx.lineWidth = 0.5;
-        ctx.beginPath();
-        ctx.arc(0, 0, radius, 0, 2 * Math.PI);
-        ctx.stroke();
-        ctx.fill();
-    }
+
     if (options.thruster) {
         ctx.save();
         ctx.strokeStyle = "red";
@@ -84,7 +79,7 @@ function draw_ship(ctx, radius, options) {
     }
     ctx.lineWidth = options.lineWidth || 3;
     ctx.strokeStyle = options.stroke || "black";
-    ctx.fillStyle = options.fill || "black";
+    ctx.fillStyle = options.fill || "red";
 
     ctx.beginPath();
     ctx.moveTo(radius, 0);
@@ -108,42 +103,7 @@ function draw_ship(ctx, radius, options) {
 
     ctx.stroke();
     // draw_rough_ship(radius, ctx);
-    if (options.guide) {
-        ctx.strokeStyle = "white";
-        ctx.fillStyle = "white";
-        ctx.lineWidth = 0.5;
-        ctx.beginPath();
-        ctx.moveTo(
-            Math.cos(-angle) * radius,
-            Math.sin(-angle) * radius
-        );
-        ctx.lineTo(0, 0);
-        ctx.lineTo(
-            Math.cos(angle) * radius,
-            Math.sin(angle) * radius
-        );
-        ctx.moveTo(-radius, 0);
-        ctx.lineTo(0, 0);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(
-            Math.cos(angle) * radius * curve2,
-            Math.sin(angle) * radius * curve2,
-            radius / 40, 0, 2 * Math.PI
-        );
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(
-            Math.cos(-angle) * radius * curve2,
-            Math.sin(-angle) * radius * curve2,
-            radius / 40, 0, 2 * Math.PI
-        );
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(radius * curve1 - radius, 0, radius / 50, 0, 2 *
-            Math.PI);
-        ctx.fill();
-    }
+
 
     ctx.restore();
     // ctx.shadowInset = false;
@@ -201,19 +161,7 @@ function draw_asteroid(ctx, radius, shape, options) {
     ctx.strokeStyle = "black"
     ctx.lineWidth = 3;
     ctx.stroke();
-    if (options.guide) {
-        ctx.lineWidth = 0.5;
-        ctx.beginPath();
-        ctx.arc(0, 0, radius, 0, 2 * Math.PI);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.lineWidth = 0.2;
-        ctx.arc(0, 0, radius + radius * options.noise, 0, 2 * Math.PI);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(0, 0, radius - radius * options.noise, 0, 2 * Math.PI);
-        ctx.stroke();
-    }
+
     ctx.restore();
 
     ctx.shadowInset = false;

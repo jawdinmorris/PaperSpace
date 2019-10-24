@@ -25,7 +25,7 @@ var AsteroidsGame = function (id) {
     this.bomb_reload_indicator = new IncrementingIndicator("bomb", 400, 560, 100, 15)
     this.level_progress_indicator = new Indicator("", this.canvas.width / 2 - 50, 30, 100, 10)
 
-    this.score_indicator = new NumberIndicator("score", this.canvas.width - 60, 15);
+    this.score_indicator = new NumberIndicator("score", this.canvas.width - 55, 20);
     this.fps_indicator = new NumberIndicator("fps",
         this.canvas.width - 10, this.canvas.height - 15, {
             digits: 2
@@ -73,10 +73,17 @@ AsteroidsGame.prototype.moving_asteroid = function (elapsed) {
 }
 
 AsteroidsGame.prototype.new_asteroid = function () {
+    if (Math.random() > 0.5) {
+        var x = randomIntFromInterval(this.canvas.width / 2 + 50, this.canvas.width)
+        var y = randomIntFromInterval(this.canvas.width / 2 + 50, this.canvas.width)
+    } else {
+        var x = randomIntFromInterval(0, this.canvas.width / 2 - 50)
+        var y = randomIntFromInterval(0, this.canvas.width / 2 - 50)
+    }
     return new Asteroid(
         this.asteroid_mass,
-        this.canvas.width * Math.random(),
-        this.canvas.height * Math.random()
+        x,
+        y
     );
 }
 
