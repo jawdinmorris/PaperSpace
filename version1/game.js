@@ -5,6 +5,16 @@ function collision(obj1, obj2) {
 function distance_between(obj1, obj2) {
     return Math.sqrt(Math.pow(obj1.x - obj2.x, 2) + Math.pow(obj1.y - obj2.y, 2));
 }
+// Load the API
+var kongregate;
+kongregateAPI.loadAPI(onComplete);
+
+// Callback function
+function onComplete() {
+    // Set the global kongregate API object
+    kongregate = kongregateAPI.getAPI();
+}
+
 var bombSound = new Audio('bomb.wav');
 var laserSound = new Audio('laser.wav')
 var shipCollisionSound = new Audio('shipCollision.wav')
@@ -44,6 +54,7 @@ var AsteroidsGame = function (id) {
 AsteroidsGame.prototype.reset_game = function () {
     this.game_over = false;
     this.score = 0;
+    this.asteroidCount = 0;
     this.baseScore = 0;
     this.level = 1;
     this.ship = new Ship(
@@ -190,6 +201,7 @@ AsteroidsGame.prototype.update = function (elapsed) {
                     projectiles.splice(i, 1);
                     this.asteroids.splice(j, 1);
                     this.split_asteroid(asteroid, elapsed);
+                    asteroidCount = asteroidCount + 1;
                     plopSound.play()
                 }
             }, this);
@@ -265,6 +277,9 @@ AsteroidsGame.prototype.draw = function () {
 
 
     if (this.game_over) {
+        // kongregate.stats.submit("score", this.score);
+        // kongregate.stats.submit("asteroids", this.asteroidCount);
+
         this.message.draw(this.c, "GAME OVER", "Press R to Reset");
         return;
     }
