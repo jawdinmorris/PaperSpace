@@ -220,7 +220,8 @@ function draw_bomb(ctx, radius, lifetime, options) {
     ctx.restore();
 }
 
-function draw_rough_star(x, y) {
+function draw_rough_star(ctx, x, y) {
+
     const rc = rough.canvas(document.getElementById('asteroids'));
     rc.linearPath([
         [0 + x, -15 + y],
@@ -230,6 +231,7 @@ function draw_rough_star(x, y) {
         [-5 + x, 0 + y],
         [0 + x, -15 + y]
     ]);
+
 }
 
 function draw_star_shape(ctx, cx, cy, spikes, innerRadius, outerRadius, stroke, fill) {
@@ -297,6 +299,29 @@ function draw_bullet_powerup(ctx, radius, lifetime) {
 
 }
 
+function draw_rough_heart(ctx, x, y) {
+    const rc = rough.canvas(document.getElementById('asteroids'));
+    var points = [
+        [0 + x, 0 + y],
+        [8 + x, -20 + y],
+        [16 + x, -16 + y],
+        [24 + x, -4 + y],
+        [20 + x, 16 + y],
+        [0 + x, 32 + y],
+        [-20 + x, 16 + y],
+        [-24 + x, -4 + y],
+        [-16 + x, -16 + y],
+        [-8 + x, -20 + y],
+        [0 + x, 0 + y]
+    ]
+    rc.curve(points, {
+        stroke: 'red',
+        strokeWidth: 2,
+        fill: 'black',
+        fillStyle: 'solid'
+    });
+}
+
 function draw_health_powerup(ctx, radius, lifetime) {
     // variables used to draw & animate the ring
     ctx.lineWidth = 0;
@@ -305,27 +330,27 @@ function draw_health_powerup(ctx, radius, lifetime) {
     ctx.save();
 
     //triangle
-    ctx.beginPath();
-    ctx.moveTo(0, 8);
-    ctx.lineTo(32.5, 8);
-    ctx.quadraticCurveTo(32, 20, 16, 32)
-    ctx.quadraticCurveTo(-2, 20, 0, 8)
-    ctx.closePath();
-    ctx.fill();
+    // ctx.beginPath();
+    // ctx.moveTo(0, 8);
+    // ctx.lineTo(32.5, 8);
+    // ctx.quadraticCurveTo(32, 20, 16, 32)
+    // ctx.quadraticCurveTo(-2, 20, 0, 8)
+    // ctx.closePath();
+    // ctx.fill();
 
-    //top left circle
-    ctx.beginPath();
-    ctx.arc(8, 9, 8, 0, Math.PI * 2, true);
-    ctx.closePath()
-    ctx.fill();
+    // //top left circle
+    // ctx.beginPath();
+    // ctx.arc(8, 9, 8, 0, Math.PI * 2, true);
+    // ctx.closePath()
+    // ctx.fill();
 
-    //top right circle
-    ctx.beginPath();
-    ctx.arc(24, 9, 8, 0, Math.PI * 2, true);
-    ctx.closePath();
-    ctx.fill();
+    // //top right circle
+    // ctx.beginPath();
+    // ctx.arc(24, 9, 8, 0, Math.PI * 2, true);
+    // ctx.closePath();
+    // ctx.fill();
 
-
+    draw_rough_heart(ctx, 0, 0);
     ctx.restore();
 }
 
@@ -404,8 +429,12 @@ function draw_background(ctx, minor, major, stroke, fill) {
         //     ctx.drawImage(this, 0, 0);
         // }
         // img.src = "circle.png";
-        if (i % 2 == 0) {
-            draw_rough_star(randomX[i], randomY[i]);
+        if (i % 1 == 0) {
+            ctx.save();
+            ctx.rotate((i * 5) * Math.PI / 180);
+            draw_rough_star(ctx, randomX[i], randomY[i]);
+
+            ctx.restore();
         }
     }
 
